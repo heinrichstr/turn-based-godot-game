@@ -16,11 +16,12 @@ config/icon="res://assets/sprites/icon.png"
 
 [display]
 
-window/size/width=1080
-window/size/height=720
+window/size/width=1920
+window/size/height=1080
 window/size/resizable=false
 window/size/borderless=true
 window/size/fullscreen=true
+window/dpi/allow_hidpi=true
 window/stretch/mode="2d"
 
 [physics]
@@ -29,4 +30,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/filters/msaa=4
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
