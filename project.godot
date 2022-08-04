@@ -12,7 +12,7 @@ config_version=4
 
 config/name="turn-based-strategy"
 run/main_scene="res://scenes/Main.tscn"
-config/icon="res://icon.png"
+config/icon="res://assets/sprites/icon.png"
 
 [display]
 
@@ -21,6 +21,7 @@ window/size/height=720
 window/size/resizable=false
 window/size/borderless=true
 window/size/fullscreen=true
+window/stretch/mode="2d"
 
 [physics]
 
