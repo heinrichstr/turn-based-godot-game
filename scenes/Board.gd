@@ -24,12 +24,21 @@ func setup_board():
 			boardData.append([row, column])
 	
 	#instance tile object and place them on the board based on their coords build from previous for loops
+	var index = 0
 	for coords in boardData:
 		var newTile = tileScene.instance()
 		$Tiles.add_child(newTile)
 		newTile.position.x = coords[0] * tileSize
 		newTile.position.y = coords[1] * tileSize
-		newTile.get_node("AnimatedSprite").frame = rng.randi_range(0, 2) #select random terrain for now
+		var terrain = rng.randi_range(0, 2) #select random terrain for now
+		newTile.get_node("AnimatedSprite").frame = terrain
+		newTile.order = index
+		newTile.coords = Vector2(coords[0] * tileSize, coords[1]* tileSize)
+		newTile.miniMapPos = Vector2(coords[0],coords[1])
+		newTile.terrain = terrain
+		newTile.fogOfWar = false
+		newTile.revealed = true
+		index = index + 1
 		#TODO: store tile information in tile arrays in boardData array
 		#TODO: add tiles to tile group
 	
