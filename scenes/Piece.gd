@@ -4,11 +4,12 @@ extends Node2D
 # Declare member variables here. Examples:
 var clickActive = false
 var hoverActive = false
+var board
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	board.get_node("BoardCollision").connect("input_event", self, "_on_BoardCollision_input_event")
 
 
 func draw_circle_arc(center, radius, angle_from, angle_to, color):
@@ -26,11 +27,11 @@ func draw_circle_arc(center, radius, angle_from, angle_to, color):
 func _draw():
 	if (clickActive && hoverActive):
 		draw_circle(Vector2(0,0), 25, Color( 0.5, 0.5, 1, 1))
-		draw_circle_arc(Vector2(0,0), 25, 0, TAU * 4 , Color( 1, 0.5, 1, .5))
+		draw_circle_arc(Vector2(0,0), 25, 0, TAU * 300 , Color( 1, 0.5, 1, 1))
 	elif (hoverActive):
 		draw_circle(Vector2(0,0), 25, Color( 0.5, 0.5, 1, .5))
 	elif (clickActive):
-		draw_circle_arc(Vector2(0,0), 25, 0, TAU * 4, Color( 1, 0.5, 1, .5))
+		draw_circle_arc(Vector2(0,0), 25, 0, TAU * 300, Color( 1, 0.5, 1, 1))
 
 
 func _on_Area2D_mouse_entered():
@@ -43,13 +44,6 @@ func _on_Area2D_mouse_exited():
 	update()
 
 
-func _on_Area2D_input_event(viewport, event, shape_idx):
-	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
-		print("clickeded", clickActive)
-		clickActive = true
-		update()
-
-
 func _on_BoardCollision_input_event(viewport, event, shape_idx):
 	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
 		print("click board")
@@ -57,3 +51,11 @@ func _on_BoardCollision_input_event(viewport, event, shape_idx):
 			clickActive = false
 			update()
 			print("remove active ", self, clickActive, hoverActive)
+
+
+
+func _on_PieceCollisionArea_input_event(viewport, event, shape_idx):
+	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
+		print("click piece")
+		clickActive = true
+		update()

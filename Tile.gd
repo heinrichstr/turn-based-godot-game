@@ -9,6 +9,7 @@ var coords = Vector2(0,0)
 var terrain = -1
 var fogOfWar = false
 var revealed = true
+var board
 
 
 # Called when the node enters the scene tree for the first time.
