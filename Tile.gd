@@ -16,5 +16,6 @@ func _ready():
 
 
 func _on_Area2D_input_event(viewport, event, shape_idx):
-	if (event is InputEventMouseButton && event.pressed):
-		print("Clicked", self)
+	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
+		print("Clicked tile", self)
+		pass
