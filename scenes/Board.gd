@@ -53,6 +53,8 @@ func setup_board():
 	$BoardCollision.position = Vector2(boardPixelSize.y / 2, boardPixelSize.x / 2)
 
 
+#build pieces randomly on the board
+#TODO: break into neutrals setup, npc setup, and player setup
 func setup_pieces():
 	var pieceRandomized = []
 	for i in range(0, 10):

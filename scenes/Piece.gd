@@ -12,6 +12,7 @@ func _ready():
 	board.get_node("BoardCollision").connect("input_event", self, "_on_BoardCollision_input_event")
 
 
+#circle stroke drawing function, used in _draw()
 func draw_circle_arc(center, radius, angle_from, angle_to, color):
 	var nb_points = 32
 	var points_arc = PoolVector2Array()
@@ -24,6 +25,7 @@ func draw_circle_arc(center, radius, angle_from, angle_to, color):
 		draw_line(points_arc[index_point], points_arc[index_point + 1], color)
 
 
+# draws overlays if pieces are hovered or active states
 func _draw():
 	if (clickActive && hoverActive):
 		draw_circle(Vector2(0,0), 25, Color( 0.5, 0.5, 1, 1))
@@ -34,16 +36,16 @@ func _draw():
 		draw_circle_arc(Vector2(0,0), 25, 0, TAU * 300, Color( 1, 0.5, 1, 1))
 
 
+#2 hover states below
 func _on_Area2D_mouse_entered():
 	hoverActive = true
 	update()
-
-
 func _on_Area2D_mouse_exited():
 	hoverActive = false
 	update()
 
 
+#if board is clicked and not on a piece, remove this piece's active status (click off of piece)
 func _on_BoardCollision_input_event(viewport, event, shape_idx):
 	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
 		print("click board")
@@ -53,7 +55,7 @@ func _on_BoardCollision_input_event(viewport, event, shape_idx):
 			print("remove active ", self, clickActive, hoverActive)
 
 
-
+#if piece is directly clicked, set it to active
 func _on_PieceCollisionArea_input_event(viewport, event, shape_idx):
 	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
 		print("click piece")
