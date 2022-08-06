@@ -10,8 +10,6 @@ script = ExtResource( 3 )
 
 [node name="Tiles" type="Node2D" parent="."]
 
-[node name="Pieces" type="Node2D" parent="."]
-
 [node name="BoardCollision" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BoardCollision"]

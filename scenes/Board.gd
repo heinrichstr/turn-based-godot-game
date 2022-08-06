@@ -5,17 +5,18 @@ extends Node2D
 var boardSize = Vector2(30,40)
 var tileSize = 64
 var boardPixelSize = Vector2(boardSize.x * tileSize, boardSize.y * tileSize)
-var boardData = []
+var boardData = [] #array of dictionaries -> [{"tile": Node2D, "x": int, "y": int, "pieces": []}, {...}]
 var rng = RandomNumberGenerator.new()
+var activeTile
 onready var tiles = $Tiles
 onready var tileScene = preload("res://scenes/Tile.tscn")
-onready var pieces = $Pieces
 onready var pieceScene = preload("res://scenes/Piece.tscn")
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	rng.randomize()
+	boardData = [] #reset board on setup
 	setup_board()
 	setup_pieces()
 
@@ -24,25 +25,28 @@ func _ready():
 func setup_board():
 	for column in boardSize.x:
 		for row in boardSize.y:
-			boardData.append([row, column])
+			boardData.append({"x": row, "y": column})
 	
 	#instance tile object and place them on the board based on their coords build from previous for loops
 	var index = 0
 	for coords in boardData:
 		var terrain = rng.randi_range(0, 2) #select random terrain for now
 		var newTile = tileScene.instance()
-		newTile.position.x = coords[0] * tileSize
-		newTile.position.y = coords[1] * tileSize
+		newTile.position.x = coords.x * tileSize
+		newTile.position.y = coords.y * tileSize
 		newTile.order = index
-		newTile.coords = Vector2(coords[0] * tileSize, coords[1]* tileSize)
-		newTile.miniMapPos = Vector2(coords[0],coords[1])
+		newTile.coords = Vector2(coords.x * tileSize, coords.y* tileSize)
+		newTile.miniMapPos = Vector2(coords.x,coords.y)
 		newTile.terrain = terrain
 		newTile.fogOfWar = false
 		newTile.revealed = true
 		newTile.board = self
 		newTile.add_to_group("tiles")
 		tiles.add_child(newTile)
-		newTile.get_node("AnimatedSprite").frame = terrain
+		newTile.get_node("TileSprite").frame = terrain
+		boardData[index].tile = newTile
+		boardData[index].pieces = [] #reset pieces to empyty on start
+		newTile.get_node("TileArea2D").connect("input_event", self, "_on_TileArea2D_input_event", [newTile])
 		index = index + 1
 		#TODO: store tile information in tile arrays in boardData array
 		#TODO: add tiles to tile group
@@ -59,17 +63,28 @@ func setup_pieces():
 	var pieceRandomized = []
 	for i in range(0, 10):
 		var randomTile = rng.randi_range(0, boardData.size())
-		print(i, " ", randomTile, " ",pieceRandomized.find(randomTile))
+		#print(i, " ", randomTile, " ",pieceRandomized.find(randomTile))
 		if (pieceRandomized.find(randomTile) == -1):
 			pieceRandomized.append(randomTile)
 	
 	for index in pieceRandomized:
+		#find index of tile from minimapPos
+		#add piece to tile commander list
 		var newPiece = pieceScene.instance()
 		newPiece.board = self
-		newPiece.position.x = boardData[index][0] * tileSize + 32
-		newPiece.position.y = boardData[index][1]  * tileSize + 32
-		pieces.add_child(newPiece)
+		newPiece.tile = boardData[index].tile
+		print(index, " ", boardData[index])
+		boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite")})
+		boardData[index].tile.topCommanderPiece = newPiece
+		boardData[index].tile.updateCommanderSprite(newPiece)
 		
-		
-	
 
+
+func _on_TileArea2D_input_event(viewport, event, shape_idx, tile):
+	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
+		print("click tile in board ", activeTile, " ", tile)
+		if activeTile:
+			activeTile.removeActive()
+		tile.setActive()
+		activeTile = tile
+		
