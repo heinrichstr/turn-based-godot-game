@@ -74,7 +74,8 @@ func setup_pieces():
 		newPiece.board = self
 		newPiece.tile = boardData[index].tile
 		print(index, " ", boardData[index])
-		boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite")})
+		for i in rand_range(1,10): 
+			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": 0})
 		boardData[index].tile.topCommanderPiece = newPiece
 		boardData[index].tile.updateCommanderSprite(newPiece)
 		
@@ -82,9 +83,10 @@ func setup_pieces():
 
 func _on_TileArea2D_input_event(viewport, event, shape_idx, tile):
 	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
-		print("click tile in board ", activeTile, " ", tile)
+		print("click tile in board, ACTIVE TILE: ", tile, " OLD TILE: ", activeTile)
 		if activeTile:
 			activeTile.removeActive()
 		tile.setActive()
 		activeTile = tile
+		tile.update()
 		
