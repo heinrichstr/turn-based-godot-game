@@ -1,5 +1,5 @@
 extends Node2D
-
+#pathfind with Dijkstra’s Algorithm to account for tile movement costs
 
 # Declare member variables here. Examples:
 var boardSize = Vector2(30,40)
