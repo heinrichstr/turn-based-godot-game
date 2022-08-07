@@ -10,10 +10,11 @@ var terrain = -1
 var fogOfWar = false
 var revealed = true
 var board
-var commandersOnTile = [] #{"piece": Piece.tscn -> Node2D, "sprite": AnimatedSprite}
+var commandersOnTile = [] #{"piece": Piece.tscn -> Node2D, "sprite": AnimatedSprite, "owner": int}
 var topCommanderPiece
 var isActive = false
 var isHover = false
+var tileOwner
 
 
 # Called when the node enters the scene tree for the first time.
@@ -23,6 +24,9 @@ func _ready():
 
 func _draw():
 	$ArmyCounter.commandersOnTile = commandersOnTile
+	$TileOwnerColor.tileOwner = tileOwner
+	$TileOwnerColor.commanderOwner = commandersOnTile
+	$TileOwnerColor.update()
 
 
 #log data for right clicks on tiles (TODO: will eventually be a modal)

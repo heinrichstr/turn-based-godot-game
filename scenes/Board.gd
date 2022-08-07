@@ -41,6 +41,7 @@ func setup_board():
 		newTile.fogOfWar = false
 		newTile.revealed = true
 		newTile.board = self
+		newTile.tileOwner = -1
 		newTile.add_to_group("tiles")
 		tiles.add_child(newTile)
 		newTile.get_node("TileSprite").frame = terrain
@@ -77,6 +78,7 @@ func setup_pieces():
 		for i in rand_range(1,10): 
 			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": 0})
 		boardData[index].tile.topCommanderPiece = newPiece
+		boardData[index].tile.tileOwner = 0
 		boardData[index].tile.updateCommanderSprite(newPiece)
 		
 
