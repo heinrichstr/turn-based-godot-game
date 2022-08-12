@@ -18,7 +18,7 @@ func _ready():
 	rng.randomize()
 	boardData = [] #reset board on setup
 	setup_board()
-	setup_pieces()
+	#setup_pieces()
 
 
 #build tiles on board, set the area2d collisionshape and center it to the board
@@ -31,23 +31,16 @@ func setup_board():
 	var index = 0
 	for coords in boardData:
 		var terrain = rng.randi_range(0, 2) #select random terrain for now
-		var newTile = tileScene.instance()
-		newTile.position.x = coords.x * tileSize
-		newTile.position.y = coords.y * tileSize
-		newTile.order = index
-		newTile.coords = Vector2(coords.x * tileSize, coords.y* tileSize)
-		newTile.miniMapPos = Vector2(coords.x,coords.y)
-		newTile.terrain = terrain
-		newTile.fogOfWar = false
-		newTile.revealed = true
-		newTile.board = self
-		newTile.tileOwner = -1
-		newTile.add_to_group("tiles")
-		tiles.add_child(newTile)
-		newTile.get_node("TileSprite").frame = terrain
-		boardData[index].tile = newTile
+		boardData[index].tile = {
+			"id": index, 
+			"coords": Vector2(coords.x, coords.y),
+			"terrain": terrain,
+			"fogOfWar": false,
+			"revealed": true,
+			"owner": -1
+			}
 		boardData[index].pieces = [] #reset pieces to empyty on start
-		newTile.get_node("TileArea2D").connect("input_event", self, "_on_TileArea2D_input_event", [newTile])
+		$TileMap.set_cell(coords.x-1, coords.y-1, terrain)
 		index = index + 1
 		#TODO: store tile information in tile arrays in boardData array
 		#TODO: add tiles to tile group
