@@ -18,7 +18,7 @@ func _ready():
 	rng.randomize()
 	boardData = [] #reset board on setup
 	setup_board()
-	#setup_pieces()
+	setup_pieces()
 
 
 #build tiles on board, set the area2d collisionshape and center it to the board
@@ -37,7 +37,9 @@ func setup_board():
 			"terrain": terrain,
 			"fogOfWar": false,
 			"revealed": true,
-			"owner": -1
+			"owner": -1,
+			"commandersOnTile": [],
+			"tileOwner": 0
 			}
 		boardData[index].pieces = [] #reset pieces to empyty on start
 		$TileMap.set_cell(coords.x-1, coords.y-1, terrain)
@@ -57,7 +59,6 @@ func setup_pieces():
 	var pieceRandomized = []
 	for i in range(0, 10):
 		var randomTile = rng.randi_range(0, boardData.size())
-		#print(i, " ", randomTile, " ",pieceRandomized.find(randomTile))
 		if (pieceRandomized.find(randomTile) == -1):
 			pieceRandomized.append(randomTile)
 	
