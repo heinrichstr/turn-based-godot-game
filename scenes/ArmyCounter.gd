@@ -2,23 +2,27 @@ extends Node2D
 
 
 # Declare member variables here. Examples:
-onready var commandersOnTile = get_owner().commandersOnTile
+onready var tileId = get_owner().tileId
+
+var numCommandersOnTile
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 
 func _draw():
-	if commandersOnTile:
+	var board = get_tree().get_root().get_node("Main/Board")
+	numCommandersOnTile = board.boardData[tileId].tile.commandersOnTile.size()
+	if numCommandersOnTile:
 		var pointCoord
-		if commandersOnTile.size() < 5:
-			pointCoord = 32 + (5 * (commandersOnTile.size() - 1))
+		if numCommandersOnTile < 5:
+			pointCoord = 32 + (5 * (numCommandersOnTile - 1))
 		else:
 			pointCoord = 32 + (5 * (5 - 1))
 			
-		for i in commandersOnTile.size():
+		for i in numCommandersOnTile:
 			if i < 5:
 				#if less than 5, center on the midpoint
 				draw_circle(Vector2(pointCoord - 10*i, 10), 3, Color( 0, 0, 0, 1))

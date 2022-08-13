@@ -14,12 +14,44 @@ onready var pieceScene = preload("res://scenes/Piece.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_node("../CameraDummy").position = Vector2((boardSize.y * 64) / 2, (boardSize.x * 64) / 2)
+	setupGame()
+
+
+func setupGame():
 	rng.randomize()
-	boardData = [] #reset board on setup
+	#reset camera to origin
+	get_node("../CameraDummy").position = Vector2((boardSize.y * 64) / 2, (boardSize.x * 64) / 2)
+	
+	#reset player state
+	get_node("../../Main").playerState = {
+		"activeTile": -1, 
+		"clickActive": false, 
+		"selectedCommander": -1, 
+		"navigation": {
+			"active": false,
+			"tileFrom": Vector2(0,0),
+			"tileTo": Vector2(0,0)
+			}
+	}
+	
+	#reset board on setup
+	boardData = [] 
+	$ActiveTileMarker.visible = false
+	
+	#remove pieces
+	for n in $Pieces.get_children(): 
+		$Pieces.remove_child(n)
+		n.queue_free()
+	
+	#reset tiles
+	get_node("TileMap").clear() 
+	
 	#pop loading screen
+	
+	#board setup
 	setup_board()
 	setup_pieces()
+	
 	#fade out loading screen
 
 
@@ -72,8 +104,10 @@ func setup_pieces():
 		newPiece.position = boardData[index].tile.coords * 64
 		print(index, " ", boardData[index])
 		for i in rand_range(1,10): 
-			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": 0})
-			newPiece.commandersOnTile = boardData[index].tile.commandersOnTile
+			var owner = floor(rand_range(0,2))
+			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner})
+			newPiece.pieceInfo = {"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner}
+			newPiece.tileId = boardData[index].tile.id
 		boardData[index].tile.topCommanderPiece = newPiece
 		boardData[index].tile.owner = 0
 		Pieces.add_child(newPiece)
