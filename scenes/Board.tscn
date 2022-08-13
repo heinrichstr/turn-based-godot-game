@@ -61,7 +61,7 @@ cell_quadrant_size = 64
 format = 1
 script = ExtResource( 2 )
 
-[node name="Tiles" type="Node2D" parent="."]
+[node name="Pieces" type="Node2D" parent="."]
 
 [node name="BoardCollision" type="Area2D" parent="."]
 

@@ -2,23 +2,25 @@ extends Node2D
 #pathfind with Dijkstra’s Algorithm to account for tile movement costs
 
 # Declare member variables here. Examples:
-var boardSize = Vector2(30,40)
+var boardSize = Vector2(10,20)
 var tileSize = 64
 var boardPixelSize = Vector2(boardSize.x * tileSize, boardSize.y * tileSize)
-var boardData = [] #array of dictionaries -> [{"tile": Node2D, "x": int, "y": int, "pieces": []}, {...}]
+var boardData = [] #array of dictionaries -> [{"id": int, "coords": Vector2, "terrain": int, "fogOfWar": boolean, "revealed": boolean, "owner": int, "commandersOnTile": Array}]
 var rng = RandomNumberGenerator.new()
 var activeTile
-onready var tiles = $Tiles
-onready var tileScene = preload("res://scenes/Tile.tscn")
+onready var Pieces = $Pieces
 onready var pieceScene = preload("res://scenes/Piece.tscn")
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	get_node("../CameraDummy").position = Vector2((boardSize.y * 64) / 2, (boardSize.x * 64) / 2)
 	rng.randomize()
 	boardData = [] #reset board on setup
+	#pop loading screen
 	setup_board()
 	setup_pieces()
+	#fade out loading screen
 
 
 #build tiles on board, set the area2d collisionshape and center it to the board
@@ -31,7 +33,7 @@ func setup_board():
 	var index = 0
 	for coords in boardData:
 		var terrain = rng.randi_range(0, 2) #select random terrain for now
-		boardData[index].tile = {
+		boardData[index].tile = { #build tile array with tile status dictionary
 			"id": index, 
 			"coords": Vector2(coords.x, coords.y),
 			"terrain": terrain,
@@ -39,7 +41,6 @@ func setup_board():
 			"revealed": true,
 			"owner": -1,
 			"commandersOnTile": [],
-			"tileOwner": 0
 			}
 		boardData[index].pieces = [] #reset pieces to empyty on start
 		$TileMap.set_cell(coords.x-1, coords.y-1, terrain)
@@ -58,7 +59,7 @@ func setup_board():
 func setup_pieces():
 	var pieceRandomized = []
 	for i in range(0, 10):
-		var randomTile = rng.randi_range(0, boardData.size())
+		var randomTile = rng.randi_range(0, boardData.size() - 1)
 		if (pieceRandomized.find(randomTile) == -1):
 			pieceRandomized.append(randomTile)
 	
@@ -67,13 +68,16 @@ func setup_pieces():
 		#add piece to tile commander list
 		var newPiece = pieceScene.instance()
 		newPiece.board = self
-		newPiece.tile = boardData[index].tile
+		newPiece.tileCoords = boardData[index].tile.coords
+		newPiece.position = boardData[index].tile.coords * 64
 		print(index, " ", boardData[index])
 		for i in rand_range(1,10): 
 			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": 0})
+			newPiece.commandersOnTile = boardData[index].tile.commandersOnTile
 		boardData[index].tile.topCommanderPiece = newPiece
-		boardData[index].tile.tileOwner = 0
-		boardData[index].tile.updateCommanderSprite(newPiece)
+		boardData[index].tile.owner = 0
+		Pieces.add_child(newPiece)
+		newPiece.add_to_group("commanders")
 		
 
 

@@ -16,5 +16,4 @@ script = ExtResource( 1 )
 script = ExtResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="CameraDummy"]
-anchor_mode = 0
 current = true

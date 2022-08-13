@@ -3,7 +3,8 @@ extends Node2D
 
 # Declare member variables here. Examples:
 var board
-var tile
+var tileCoords
+var commandersOnTile
 
 
 # Called when the node enters the scene tree for the first time.

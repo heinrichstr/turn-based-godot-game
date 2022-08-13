@@ -15,7 +15,10 @@ func _unhandled_input(event):
 		var camera = get_tree().get_root().get_node("Main/CameraDummy")
 		var clicked_cell = world_to_map(get_global_mouse_position())
 		#print("clicked: ", event.position, " Cam Pos: ", camera.position, " global to click: ", get_global_mouse_position())
-		print(clicked_cell)
+		var board = get_node("../../Board")
+		var tileId = clicked_cell.x + (clicked_cell.y * board.boardSize.y)
+		if(clicked_cell.x >= 0 && clicked_cell.x < board.boardSize.y && clicked_cell.y >= 0 && clicked_cell.y < board.boardSize.x):
+			print(clicked_cell, " ", tileId, " ", board.boardData[tileId])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

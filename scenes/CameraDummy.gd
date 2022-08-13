@@ -4,10 +4,9 @@ extends Node2D
 # Declare member variables here. Examples:
 var cameraSpeed = 500
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 #runs camera movement based on keypress
 func _physics_process(delta):
