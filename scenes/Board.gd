@@ -32,7 +32,6 @@ var path_end
 func _ready():
 	setupGame()
 	pathfindingSetup()
-	$PathfindingMarker.drawNav(getAStarPath(Vector2(32,32), Vector2(13*65, 7 * 65)))
 
 
 # ~~~~~~~~~~~ ASTAR PATHFINDING BEGIN~~~~~~~~~~~
@@ -61,7 +60,7 @@ func pathfindingSetup():
 	#loop over all tiles and connect them in all 8 directions as long as they are valid cells (id != -1)
 	index = 0
 	for cell in boardData:
-		if ($TileMap.get_cellv(cell.tile.coords) != -1):
+		if ($TileMap.get_cellv((cell.tile.coords - Vector2(1,1))) != -1):
 			for vNeighborCell in [
 				Vector2(cell.tile.coords.x, cell.tile.coords.y - 1),
 				Vector2(cell.tile.coords.x, cell.tile.coords.y + 1),
@@ -85,7 +84,7 @@ func getAStarPath(vStartPosition:Vector2,vTargetPosition:Vector2)->Array:
 	var idxTarget=getTileIdByCoords(vCellTarget)
 	 # Just a small check to see if both points are in the grid
 	if astar.has_point(idxStart) and astar.has_point(idxTarget):
-		print("A-star: ", astar.get_point_count(), " | ", Array(astar.get_point_path(idxStart, idxTarget)))
+		#print("A-star: ", idxStart, " | ", idxTarget, " | ", astar.are_points_connected(idxStart, idxTarget), " | ",Array(astar.get_point_path(idxStart, idxTarget)))
 		return Array(astar.get_point_path(idxStart, idxTarget))
 	return []
 
