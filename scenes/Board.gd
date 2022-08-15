@@ -5,16 +5,91 @@ extends Node2D
 var boardSize = Vector2(10,20)
 var tileSize = 64
 var boardPixelSize = Vector2(boardSize.x * tileSize, boardSize.y * tileSize)
-var boardData = [] #array of dictionaries -> [{"id": int, "coords": Vector2, "terrain": int, "fogOfWar": boolean, "revealed": boolean, "owner": int, "commandersOnTile": Array}]
+var boardData = [] 
+#array of dictionaries -> [{
+	#"pieces": [], 
+	#"tile": {
+		#id": int, 
+		#"coords": Vector2, 
+		#"terrain": int, 
+		#"fogOfWar": boolean, 
+		#"revealed": boolean, 
+		#"owner": int, 
+		#"commandersOnTile": Array
+	#}
+#}]
 var rng = RandomNumberGenerator.new()
 var activeTile
 onready var Pieces = $Pieces
 onready var pieceScene = preload("res://scenes/Piece.tscn")
 
+onready var astar:AStar2D = AStar2D.new()
+var path_start
+var path_end
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	setupGame()
+	pathfindingSetup()
+	$PathfindingMarker.drawNav(getAStarPath(Vector2(32,32), Vector2(13*65, 7 * 65)))
+
+
+# ~~~~~~~~~~~ ASTAR PATHFINDING BEGIN~~~~~~~~~~~
+
+#astar helper functions
+func getTileIdByCoords(coords):
+	return coords.x + (coords.y * boardSize.y)
+func occupyAStarCell(vGlobalPosition:Vector2)->void:
+	 var vCell=$TileMap.world_to_map(vGlobalPosition)
+	 var idx=getTileIdByCoords(vCell)
+	 if astar.has_point(idx):astar.set_point_disabled(idx, true)
+func freeAStarCell(vGlobalPosition:Vector2)->void:
+	 var vCell=$TileMap.world_to_map(vGlobalPosition)
+	 var idx=getTileIdByCoords(vCell)
+	 if astar.has_point(idx):astar.set_point_disabled(idx, false)
+
+
+func pathfindingSetup():
+	#loop over all tiles and add them to astar point grid
+	astar.reserve_space(boardSize.x * boardSize.y)
+	var index = 0
+	for cell in boardData:
+		astar.add_point(index, cell.tile.coords)
+		index += 1
+	
+	#loop over all tiles and connect them in all 8 directions as long as they are valid cells (id != -1)
+	index = 0
+	for cell in boardData:
+		if ($TileMap.get_cellv(cell.tile.coords) != -1):
+			for vNeighborCell in [
+				Vector2(cell.tile.coords.x, cell.tile.coords.y - 1),
+				Vector2(cell.tile.coords.x, cell.tile.coords.y + 1),
+				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y),
+				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y),
+				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y - 1),
+				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y + 1),
+				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y + 1),
+				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y - 1)
+			]:
+				var neighborTileId=getTileIdByCoords(vNeighborCell)
+				if astar.has_point(neighborTileId):
+					astar.connect_points(index, neighborTileId, false)
+		index += 1
+
+
+func getAStarPath(vStartPosition:Vector2,vTargetPosition:Vector2)->Array:
+	var vCellStart = $TileMap.world_to_map(vStartPosition)
+	var idxStart=getTileIdByCoords(vCellStart)
+	var vCellTarget = $TileMap.world_to_map(vTargetPosition)
+	var idxTarget=getTileIdByCoords(vCellTarget)
+	 # Just a small check to see if both points are in the grid
+	if astar.has_point(idxStart) and astar.has_point(idxTarget):
+		print("A-star: ", astar.get_point_count(), " | ", Array(astar.get_point_path(idxStart, idxTarget)))
+		return Array(astar.get_point_path(idxStart, idxTarget))
+	return []
+
+# ~~~~~~~~~~~ ASTAR PATHFINDING END~~~~~~~~~~~
 
 
 func setupGame():
@@ -102,7 +177,6 @@ func setup_pieces():
 		newPiece.board = self
 		newPiece.tileCoords = boardData[index].tile.coords
 		newPiece.position = boardData[index].tile.coords * 64
-		print(index, " ", boardData[index])
 		for i in rand_range(1,10): 
 			var owner = floor(rand_range(0,2))
 			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner})
