@@ -138,7 +138,7 @@ func setup_board():
 	#instance tile object and place them on the board based on their coords build from previous for loops
 	var index = 0
 	for coords in boardData:
-		var terrain = rng.randi_range(0, 2) #select random terrain for now
+		var terrain = rng.randi_range(3, 6) #select random terrain for now
 		boardData[index].tile = { #build tile array with tile status dictionary
 			"id": index, 
 			"coords": Vector2(coords.x, coords.y),

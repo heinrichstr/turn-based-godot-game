@@ -16,9 +16,11 @@ var playerState = {
 func _ready():
 	get_node("Board/TileMap").connect("tilemapClick", self, "_on_tilemap_click_signal")
 	get_node("Board/TileMap").connect("tilemapMotion", self, "_on_tilemap_movement_signal")
+	get_node("Board/TileMap").connect("tilemapRightClick", self, "_on_tilemap_right_click_signal")
 
 
 func _on_tilemap_click_signal(tileId, clicked_cell):
+	$Modals.closeAllPopups()
 	print("signal received ", tileId, " ", clicked_cell)
 	print("commander size: ", $Board.boardData[tileId].tile.commandersOnTile.size())
 	
@@ -49,3 +51,20 @@ func _on_tilemap_movement_signal(mouseCoords):
 		$Board/PathfindingMarker.navPoints = $Board.getAStarPath(playerState.navigation.tileFrom,get_global_mouse_position())
 		$Board/PathfindingMarker.update()
 		
+
+
+func _on_tilemap_right_click_signal(tile_data, clicked_cell, tile_id):
+	cancelNav()
+	print("popup signal received")
+	$Modals.showPopup(tile_data)
+	#show popup
+
+
+func cancelNav():
+	playerState.navigation = {
+		"active": false,
+		"tileFrom": Vector2(0,0),
+		"tileTo": Vector2(0,0)
+	}
+	$Board/PathfindingMarker.clear()
+	$Board/ActiveTileMarker.visible = false

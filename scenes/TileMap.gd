@@ -1,6 +1,7 @@
 extends TileMap
 
 signal tilemapClick
+signal tilemapRightClick
 signal tilemapMotion
 var clicked_cell
 onready var board = get_node("../../Board")
@@ -22,6 +23,12 @@ func _unhandled_input(event): #grabs tile coords from tilemap, then maths out wh
 		if(clicked_cell.x >= 0 && clicked_cell.x < board.boardSize.y && clicked_cell.y >= 0 && clicked_cell.y < board.boardSize.x):
 			#print(clicked_cell, " ", tileId, " ", board.boardData[tileId])
 			emit_signal("tilemapClick", tileId, clicked_cell)
+	
+	elif (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("right_click")):
+		clicked_cell = world_to_map(get_global_mouse_position())
+		var tileId = clicked_cell.x + (clicked_cell.y * board.boardSize.y)
+		if(clicked_cell.x >= 0 && clicked_cell.x < board.boardSize.y && clicked_cell.y >= 0 && clicked_cell.y < board.boardSize.x):
+			emit_signal("tilemapRightClick", board.boardData[tileId].tile , clicked_cell, tileId)
 	
 	elif (event is InputEventMouseMotion):
 		var mouseCoords = get_global_mouse_position()
