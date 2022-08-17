@@ -8,7 +8,8 @@ var playerState = {
 	"navigation": {
 		"active": false,
 		"tileFrom": Vector2(0,0),
-		"tileTo": Vector2(0,0)
+		"tileTo": Vector2(0,0),
+		"activatedTileId": -1
 		}
 	}
 
@@ -34,11 +35,20 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 	$Modals.closeAllPopups()
 	print("signal received ", tileId, " ", clicked_cell)
 	print("commander size: ", $Board.boardData[tileId].tile.commandersOnTile.size())
+	print("commandersOnTileInfo: ", $Board.boardData[tileId].tile.commandersOnTile)
+	
+	if playerState.clickActive == true && playerState.navigation.tileFrom:
+		$Board.boardData[playerState.activatedTileId].tile.commandersOnTile[0].piece.movePiece($Board.getAStarPath(playerState.navigation.tileFrom,get_global_mouse_position()))
 	
 	#set clickActive to true, place tile marker and set to visible if valid click, otherwise hide the node
 	#set active tile to tileId
-	if $Board.boardData[tileId].tile.commandersOnTile.size() > 0 && $Board.boardData[tileId].tile.commandersOnTile.find({"owner": 0}):
+	elif $Board.boardData[tileId].tile.commandersOnTile.size() > 0 && $Board.boardData[tileId].tile.commandersOnTile[0].owner == 0:
+		
+		#set active
 		playerState.clickActive = true
+		playerState.activatedTileId = tileId
+		
+		#create tile obstacles TODO: set this based on piece pathfinding
 		setObstacles([5])
 		$Board/ActiveTileMarker.position = ($Board.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
 		$Board/ActiveTileMarker.visible = true
@@ -46,6 +56,7 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 		playerState.navigation.active = true
 		playerState.navigation.tileFrom = $Board.boardData[tileId].tile.coords * 64
 		#playerState.navigation.tileFrom = $Board.boardData[tileId].tile.coords
+	
 	elif $Board.boardData[tileId].tile.commandersOnTile.size() == 0:
 		playerState.clickActive = false
 		if $Board.has_node("activeIndicator"):

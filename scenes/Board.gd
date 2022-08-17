@@ -15,7 +15,13 @@ var boardData = []
 		#"fogOfWar": boolean, 
 		#"revealed": boolean, 
 		#"owner": int, 
-		#"commandersOnTile": Array
+		#"commandersOnTile": [
+			#{
+				#"piece": Node2D, 
+				#"sprite": Node2D/AnimatedSprite, 
+				#"owner": int
+			#}
+		#]
 	#}
 #}]
 var rng = RandomNumberGenerator.new()
@@ -182,10 +188,11 @@ func setup_pieces():
 		newPiece.tileCoords = boardData[index].tile.coords
 		newPiece.position = boardData[index].tile.coords * 64
 		for i in rand_range(1,10): 
-			var owner = floor(rand_range(0,2))
+			var owner = floor(rand_range(0,3))
 			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner})
-			newPiece.pieceInfo = {"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner}
+			newPiece.pieceInfo = {"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
 			newPiece.tileId = boardData[index].tile.id
+			newPiece.tileCoords = boardData[index].tile.coords
 		boardData[index].tile.topCommanderPiece = newPiece
 		boardData[index].tile.owner = 0
 		Pieces.add_child(newPiece)
