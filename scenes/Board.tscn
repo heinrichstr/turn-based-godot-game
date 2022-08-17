@@ -117,6 +117,7 @@ script = ExtResource( 3 )
 position = Vector2( 64, 64 )
 tile_set = SubResource( 1 )
 cell_quadrant_size = 64
+cell_clip_uv = true
 format = 1
 script = ExtResource( 2 )
 

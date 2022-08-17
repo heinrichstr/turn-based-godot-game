@@ -31,7 +31,6 @@ var path_end
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	setupGame()
-	pathfindingSetup()
 
 
 # ~~~~~~~~~~~ ASTAR PATHFINDING BEGIN~~~~~~~~~~~
@@ -47,14 +46,20 @@ func freeAStarCell(vGlobalPosition:Vector2)->void:
 	 var vCell=$TileMap.world_to_map(vGlobalPosition)
 	 var idx=getTileIdByCoords(vCell)
 	 if astar.has_point(idx):astar.set_point_disabled(idx, false)
+func getPointCost(coords):
+	if ($TileMap.get_cellv(coords - Vector2(1,1)) == 5 || $TileMap.get_cellv(coords- Vector2(1,1)) == 6):
+		return 2.0
+	else:
+		return 1.0
 
 
 func pathfindingSetup():
 	#loop over all tiles and add them to astar point grid
+	astar.clear()
 	astar.reserve_space(boardSize.x * boardSize.y)
 	var index = 0
 	for cell in boardData:
-		astar.add_point(index, cell.tile.coords)
+		astar.add_point(index, cell.tile.coords, getPointCost(cell.tile.coords))
 		index += 1
 	
 	#loop over all tiles and connect them in all 8 directions as long as they are valid cells (id != -1)
@@ -125,7 +130,7 @@ func setupGame():
 	#board setup
 	setup_board()
 	setup_pieces()
-	
+	pathfindingSetup()
 	#fade out loading screen
 
 
@@ -164,7 +169,7 @@ func setup_board():
 #TODO: break into neutrals setup, npc setup, and player setup
 func setup_pieces():
 	var pieceRandomized = []
-	for i in range(0, 10):
+	for _i in range(0, 10):
 		var randomTile = rng.randi_range(0, boardData.size() - 1)
 		if (pieceRandomized.find(randomTile) == -1):
 			pieceRandomized.append(randomTile)

@@ -19,6 +19,17 @@ func _ready():
 	get_node("Board/TileMap").connect("tilemapRightClick", self, "_on_tilemap_right_click_signal")
 
 
+func setObstacles(tileIds): #array of int that corresponds to tilemap id's that aren't pathable
+	var obstacles = []
+	for id in tileIds:
+		var obstacleCoords = $Board/TileMap.get_used_cells_by_id(id)
+		for coords in obstacleCoords:
+			obstacles.append(coords)
+	for coords in obstacles:
+		var tileAstarId = $Board.getTileIdByCoords(Vector2(coords.x + 1, coords.y + 1))
+		$Board.astar.set_point_disabled(tileAstarId, true)
+
+
 func _on_tilemap_click_signal(tileId, clicked_cell):
 	$Modals.closeAllPopups()
 	print("signal received ", tileId, " ", clicked_cell)
@@ -28,6 +39,7 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 	#set active tile to tileId
 	if $Board.boardData[tileId].tile.commandersOnTile.size() > 0 && $Board.boardData[tileId].tile.commandersOnTile.find({"owner": 0}):
 		playerState.clickActive = true
+		setObstacles([5])
 		$Board/ActiveTileMarker.position = ($Board.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
 		$Board/ActiveTileMarker.visible = true
 		playerState.activeTile = tileId
@@ -38,8 +50,6 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 		playerState.clickActive = false
 		if $Board.has_node("activeIndicator"):
 			$Board/ActiveTileMarker.visible = false
-	
-	
 	
 	#check if commander on tile is owned
 	#activate movement
