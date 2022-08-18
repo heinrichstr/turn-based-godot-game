@@ -26,16 +26,16 @@ func movePiece(navpoints):
 	for move in pieceInfo.movement:
 		if pieceInfo.movementRemaining > 0:
 			if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
-				board.get_parent().playerState.clickActive = false
-				board.get_parent().playerState.navigation.active = false
-				board.get_parent().playerState.navigation.animationActive = true
+				PlayerState.playerState.clickActive = false
+				PlayerState.playerState.navigation.active = false
+				PlayerState.playerState.navigation.animationActive = true
 				var newTileId = board.getTileIdByCoords(navpoints[index+1])
 				
 				#remove the tile from the boardData
 				board.boardData[tileId].tile.commandersOnTile.remove(0) #TODO: update this with remove by piece id number
 				
 				#move tile and set it data to the new tile
-				print("animation State: ", board.get_parent().playerState.navigation.animationActive)
+				print("animation State: ", PlayerState.playerState.navigation.animationActive)
 				update()
 				position = navpoints[index+1] * 64
 				tileCoords = navpoints[index+1]
@@ -54,4 +54,4 @@ func movePiece(navpoints):
 				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
 				index += 1
 	board.get_parent().cancelNav()
-	board.get_parent().playerState.navigation.animationActive = false
+	PlayerState.playerState.navigation.animationActive = false

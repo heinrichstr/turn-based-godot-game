@@ -108,18 +108,7 @@ func setupGame():
 	get_node("../CameraDummy").position = Vector2((boardSize.y * 64) / 2, (boardSize.x * 64) / 2)
 	
 	#reset player state
-	get_node("../../Main").playerState = {
-	"activeTile": -1, 
-	"clickActive": false, 
-	"selectedCommander": -1, 
-	"navigation": {
-		"active": false,
-		"tileFrom": Vector2(0,0),
-		"tileTo": Vector2(0,0),
-		"activatedTileId": -1,
-		"animationActive": false
-		}
-	}
+	PlayerState.playerState = PlayerState.playerStateDefault
 	
 	#reset board on setup
 	boardData = [] 
@@ -192,7 +181,7 @@ func setup_pieces():
 		for i in rand_range(1,10): 
 			var owner = floor(rand_range(0,3))
 			boardData[index].tile.commandersOnTile.append({"piece": newPiece})
-			newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": {}}
+			newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": { "obstacles": [4] }}
 			newPiece.tileId = boardData[index].tile.id
 			newPiece.tileCoords = boardData[index].tile.coords
 		boardData[index].tile.topCommanderPiece = newPiece

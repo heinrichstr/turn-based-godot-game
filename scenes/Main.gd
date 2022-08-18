@@ -1,20 +1,6 @@
 extends Node2D
 
 
-var playerState = { #also set in board.setupGame()
-	"activeTile": -1, 
-	"clickActive": false, 
-	"selectedCommander": -1, 
-	"navigation": {
-		"active": false,
-		"tileFrom": Vector2(0,0),
-		"tileTo": Vector2(0,0),
-		"activatedTileId": -1,
-		"animationActive": false
-		}
-	}
-
-
 func _ready():
 	get_node("Board/TileMap").connect("tilemapClick", self, "_on_tilemap_click_signal")
 	get_node("Board/TileMap").connect("tilemapMotion", self, "_on_tilemap_movement_signal")
@@ -38,31 +24,30 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 	#print("commander size: ", $Board.boardData[tileId].tile.commandersOnTile.size())
 	#print("commandersOnTileInfo: ", $Board.boardData[tileId].tile.commandersOnTile)
 	
-	if playerState.navigation.animationActive == true:
+	if PlayerState.playerState.navigation.animationActive == true:
 		return
 	
-	if playerState.clickActive == true && playerState.navigation.tileFrom:
-		$Board.boardData[playerState.activatedTileId].tile.commandersOnTile[0].piece.movePiece($Board.getAStarPath(playerState.navigation.tileFrom,get_global_mouse_position()))
+	if PlayerState.playerState.clickActive == true && PlayerState.playerState.navigation.tileFrom:
+		$Board.boardData[PlayerState.playerState.activatedTileId].tile.commandersOnTile[0].piece.movePiece($Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position()))
 	
 	#set clickActive to true, place tile marker and set to visible if valid click, otherwise hide the node
 	#set active tile to tileId
 	elif $Board.boardData[tileId].tile.commandersOnTile.size() > 0 && $Board.boardData[tileId].tile.commandersOnTile[0].piece.pieceInfo.owner == 0:
 		
 		#set active
-		playerState.clickActive = true
-		playerState.activatedTileId = tileId
+		PlayerState.playerState.clickActive = true
+		PlayerState.playerState.activatedTileId = tileId
 		
 		#create tile obstacles TODO: set this based on piece pathfinding
 		setObstacles([5])
 		$Board/ActiveTileMarker.position = ($Board.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
 		$Board/ActiveTileMarker.visible = true
-		playerState.activeTile = tileId
-		playerState.navigation.active = true
-		playerState.navigation.tileFrom = $Board.boardData[tileId].tile.coords * 64
-		#playerState.navigation.tileFrom = $Board.boardData[tileId].tile.coords
+		PlayerState.playerState.activeTile = tileId
+		PlayerState.playerState.navigation.active = true
+		PlayerState.playerState.navigation.tileFrom = $Board.boardData[tileId].tile.coords * 64
 	
 	elif $Board.boardData[tileId].tile.commandersOnTile.size() == 0:
-		playerState.clickActive = false
+		PlayerState.playerState.clickActive = false
 		if $Board.has_node("activeIndicator"):
 			$Board/ActiveTileMarker.visible = false
 	
@@ -71,9 +56,9 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 
 
 func _on_tilemap_movement_signal(mouseCoords):
-	if playerState.navigation.active == true:
+	if PlayerState.playerState.navigation.active == true:
 		$Board/PathfindingMarker.clear()
-		$Board/PathfindingMarker.navPoints = $Board.getAStarPath(playerState.navigation.tileFrom,get_global_mouse_position())
+		$Board/PathfindingMarker.navPoints = $Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position())
 		$Board/PathfindingMarker.update()
 		
 
@@ -86,10 +71,12 @@ func _on_tilemap_right_click_signal(tile_data, clicked_cell, tile_id):
 
 
 func cancelNav():
-	playerState.navigation = {
+	PlayerState.playerState.navigation = {
 		"active": false,
 		"tileFrom": Vector2(0,0),
 		"tileTo": Vector2(0,0)
 	}
 	$Board/PathfindingMarker.clear()
 	$Board/ActiveTileMarker.visible = false
+
+

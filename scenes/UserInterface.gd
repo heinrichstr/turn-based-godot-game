@@ -2,8 +2,8 @@ extends CanvasLayer
 
 
 # Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+onready var mainNode = get_tree().get_root().get_node("Main")
+onready var boardNode = get_tree().get_root().get_node("Main/Board")
 
 
 # Called when the node enters the scene tree for the first time.
