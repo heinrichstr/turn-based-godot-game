@@ -1,7 +1,7 @@
 extends Node2D
 
 
-var playerState = {
+var playerState = { #also set in board.setupGame()
 	"activeTile": -1, 
 	"clickActive": false, 
 	"selectedCommander": -1, 
@@ -9,7 +9,8 @@ var playerState = {
 		"active": false,
 		"tileFrom": Vector2(0,0),
 		"tileTo": Vector2(0,0),
-		"activatedTileId": -1
+		"activatedTileId": -1,
+		"animationActive": false
 		}
 	}
 
@@ -33,16 +34,19 @@ func setObstacles(tileIds): #array of int that corresponds to tilemap id's that 
 
 func _on_tilemap_click_signal(tileId, clicked_cell):
 	$Modals.closeAllPopups()
-	print("signal received ", tileId, " ", clicked_cell)
-	print("commander size: ", $Board.boardData[tileId].tile.commandersOnTile.size())
-	print("commandersOnTileInfo: ", $Board.boardData[tileId].tile.commandersOnTile)
+	#print("signal received ", tileId, " ", clicked_cell)
+	#print("commander size: ", $Board.boardData[tileId].tile.commandersOnTile.size())
+	#print("commandersOnTileInfo: ", $Board.boardData[tileId].tile.commandersOnTile)
+	
+	if playerState.navigation.animationActive == true:
+		return
 	
 	if playerState.clickActive == true && playerState.navigation.tileFrom:
 		$Board.boardData[playerState.activatedTileId].tile.commandersOnTile[0].piece.movePiece($Board.getAStarPath(playerState.navigation.tileFrom,get_global_mouse_position()))
 	
 	#set clickActive to true, place tile marker and set to visible if valid click, otherwise hide the node
 	#set active tile to tileId
-	elif $Board.boardData[tileId].tile.commandersOnTile.size() > 0 && $Board.boardData[tileId].tile.commandersOnTile[0].owner == 0:
+	elif $Board.boardData[tileId].tile.commandersOnTile.size() > 0 && $Board.boardData[tileId].tile.commandersOnTile[0].piece.pieceInfo.owner == 0:
 		
 		#set active
 		playerState.clickActive = true

@@ -22,21 +22,36 @@ func _draw(): #draw owner color on the board
 
 func movePiece(navpoints):
 	var index = 0
+	
 	for move in pieceInfo.movement:
 		if pieceInfo.movementRemaining > 0:
 			if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
+				board.get_parent().playerState.clickActive = false
+				board.get_parent().playerState.navigation.active = false
+				board.get_parent().playerState.navigation.animationActive = true
 				var newTileId = board.getTileIdByCoords(navpoints[index+1])
 				
 				#remove the tile from the boardData
 				board.boardData[tileId].tile.commandersOnTile.remove(0) #TODO: update this with remove by piece id number
 				
 				#move tile and set it data to the new tile
+				print("animation State: ", board.get_parent().playerState.navigation.animationActive)
+				update()
 				position = navpoints[index+1] * 64
 				tileCoords = navpoints[index+1]
 				tileId = newTileId
 				board.boardData[newTileId].tile.commandersOnTile.append(pieceInfo)
+				var t = Timer.new()
+				t.set_wait_time(0.5)
+				t.set_one_shot(true)
+				self.add_child(t)
+				t.start()
+				yield(t, "timeout")
+				t.queue_free()
 				
 				#set movement and increment index for loop
-				update()
+				
 				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
 				index += 1
+	board.get_parent().cancelNav()
+	board.get_parent().playerState.navigation.animationActive = false

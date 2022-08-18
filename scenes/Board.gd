@@ -109,14 +109,16 @@ func setupGame():
 	
 	#reset player state
 	get_node("../../Main").playerState = {
-		"activeTile": -1, 
-		"clickActive": false, 
-		"selectedCommander": -1, 
-		"navigation": {
-			"active": false,
-			"tileFrom": Vector2(0,0),
-			"tileTo": Vector2(0,0)
-			}
+	"activeTile": -1, 
+	"clickActive": false, 
+	"selectedCommander": -1, 
+	"navigation": {
+		"active": false,
+		"tileFrom": Vector2(0,0),
+		"tileTo": Vector2(0,0),
+		"activatedTileId": -1,
+		"animationActive": false
+		}
 	}
 	
 	#reset board on setup
@@ -189,8 +191,8 @@ func setup_pieces():
 		newPiece.position = boardData[index].tile.coords * 64
 		for i in rand_range(1,10): 
 			var owner = floor(rand_range(0,3))
-			boardData[index].tile.commandersOnTile.append({"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner})
-			newPiece.pieceInfo = {"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
+			boardData[index].tile.commandersOnTile.append({"piece": newPiece})
+			newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": {}}
 			newPiece.tileId = boardData[index].tile.id
 			newPiece.tileCoords = boardData[index].tile.coords
 		boardData[index].tile.topCommanderPiece = newPiece
