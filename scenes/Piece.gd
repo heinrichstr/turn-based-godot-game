@@ -29,18 +29,18 @@ func movePiece(navpoints):
 				PlayerState.playerState.clickActive = false
 				PlayerState.playerState.navigation.active = false
 				PlayerState.playerState.navigation.animationActive = true
+				PlayerState.boardNode.get_node("ActiveTileMarker").visible = false
 				var newTileId = board.getTileIdByCoords(navpoints[index+1])
 				
 				#remove the tile from the boardData
-				board.boardData[tileId].tile.commandersOnTile.remove(0) #TODO: update this with remove by piece id number
+				PlayerState.boardData[tileId].tile.commandersOnTile.remove(0) #TODO: update this with remove by piece id number
 				
 				#move tile and set it data to the new tile
-				print("animation State: ", PlayerState.playerState.navigation.animationActive)
 				update()
 				position = navpoints[index+1] * 64
 				tileCoords = navpoints[index+1]
 				tileId = newTileId
-				board.boardData[newTileId].tile.commandersOnTile.append(pieceInfo)
+				PlayerState.boardData[newTileId].tile.commandersOnTile.append(pieceInfo)
 				var t = Timer.new()
 				t.set_wait_time(0.5)
 				t.set_one_shot(true)

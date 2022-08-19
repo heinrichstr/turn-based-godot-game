@@ -14,7 +14,7 @@ func _ready():
 
 func _draw():
 	var board = get_tree().get_root().get_node("Main/Board")
-	numCommandersOnTile = board.boardData[tileId].tile.commandersOnTile.size()
+	numCommandersOnTile = PlayerState.boardData[tileId].tile.commandersOnTile.size()
 	if numCommandersOnTile:
 		var pointCoord
 		if numCommandersOnTile < 5:

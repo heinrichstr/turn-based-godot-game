@@ -16,6 +16,10 @@ var playerStateDefault = {
 
 var playerState = playerStateDefault
 
+var boardData = [] 
+
+var boardNode
+var mainNode
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

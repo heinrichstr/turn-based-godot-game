@@ -5,7 +5,7 @@ extends Node2D
 var boardSize = Vector2(10,20)
 var tileSize = 64
 var boardPixelSize = Vector2(boardSize.x * tileSize, boardSize.y * tileSize)
-var boardData = [] 
+
 #array of dictionaries -> [{
 	#"pieces": [], 
 	#"tile": {
@@ -36,6 +36,7 @@ var path_end
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	PlayerState.boardNode = self
 	setupGame()
 
 
@@ -64,13 +65,13 @@ func pathfindingSetup():
 	astar.clear()
 	astar.reserve_space(boardSize.x * boardSize.y)
 	var index = 0
-	for cell in boardData:
+	for cell in PlayerState.boardData:
 		astar.add_point(index, cell.tile.coords, getPointCost(cell.tile.coords))
 		index += 1
 	
 	#loop over all tiles and connect them in all 8 directions as long as they are valid cells (id != -1)
 	index = 0
-	for cell in boardData:
+	for cell in PlayerState.boardData:
 		if ($TileMap.get_cellv((cell.tile.coords - Vector2(1,1))) != -1):
 			for vNeighborCell in [
 				Vector2(cell.tile.coords.x, cell.tile.coords.y - 1),
@@ -111,7 +112,7 @@ func setupGame():
 	PlayerState.playerState = PlayerState.playerStateDefault
 	
 	#reset board on setup
-	boardData = [] 
+	PlayerState.boardData.clear()
 	$ActiveTileMarker.visible = false
 	
 	#remove pieces
@@ -135,13 +136,13 @@ func setupGame():
 func setup_board():
 	for column in boardSize.x:
 		for row in boardSize.y:
-			boardData.append({"x": row, "y": column})
+			PlayerState.boardData.append({"x": row, "y": column})
 	
 	#instance tile object and place them on the board based on their coords build from previous for loops
 	var index = 0
-	for coords in boardData:
+	for coords in PlayerState.boardData:
 		var terrain = rng.randi_range(3, 6) #select random terrain for now
-		boardData[index].tile = { #build tile array with tile status dictionary
+		PlayerState.boardData[index].tile = { #build tile array with tile status dictionary
 			"id": index, 
 			"coords": Vector2(coords.x, coords.y),
 			"terrain": terrain,
@@ -150,14 +151,14 @@ func setup_board():
 			"owner": -1,
 			"commandersOnTile": [],
 			}
-		boardData[index].pieces = [] #reset pieces to empyty on start
+		PlayerState.boardData[index].pieces = [] #reset pieces to empyty on start
 		$TileMap.set_cell(coords.x-1, coords.y-1, terrain)
 		index = index + 1
-		#TODO: store tile information in tile arrays in boardData array
+		#TODO: store tile information in tile arrays in PlayerState.boardData array
 		#TODO: add tiles to tile group
 	
 	#fit board collision shape to board size automatically on start
-	var maxBoardDimension = boardData[boardData.size() - 1]
+	var maxBoardDimension = PlayerState.boardData[PlayerState.boardData.size() - 1]
 	$BoardCollision/CollisionShape2D.shape.extents = Vector2(boardPixelSize.y / 2, boardPixelSize.x / 2)
 	$BoardCollision.position = Vector2(boardPixelSize.y / 2, boardPixelSize.x / 2)
 
@@ -167,7 +168,7 @@ func setup_board():
 func setup_pieces():
 	var pieceRandomized = []
 	for _i in range(0, 10):
-		var randomTile = rng.randi_range(0, boardData.size() - 1)
+		var randomTile = rng.randi_range(0, PlayerState.boardData.size() - 1)
 		if (pieceRandomized.find(randomTile) == -1):
 			pieceRandomized.append(randomTile)
 	
@@ -176,16 +177,16 @@ func setup_pieces():
 		#add piece to tile commander list
 		var newPiece = pieceScene.instance()
 		newPiece.board = self
-		newPiece.tileCoords = boardData[index].tile.coords
-		newPiece.position = boardData[index].tile.coords * 64
+		newPiece.tileCoords = PlayerState.boardData[index].tile.coords
+		newPiece.position = PlayerState.boardData[index].tile.coords * 64
 		for i in rand_range(1,10): 
 			var owner = floor(rand_range(0,3))
-			boardData[index].tile.commandersOnTile.append({"piece": newPiece})
+			PlayerState.boardData[index].tile.commandersOnTile.append({"piece": newPiece})
 			newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": { "obstacles": [4] }}
-			newPiece.tileId = boardData[index].tile.id
-			newPiece.tileCoords = boardData[index].tile.coords
-		boardData[index].tile.topCommanderPiece = newPiece
-		boardData[index].tile.owner = 0
+			newPiece.tileId = PlayerState.boardData[index].tile.id
+			newPiece.tileCoords = PlayerState.boardData[index].tile.coords
+		PlayerState.boardData[index].tile.topCommanderPiece = newPiece
+		PlayerState.boardData[index].tile.owner = 0
 		Pieces.add_child(newPiece)
 		newPiece.add_to_group("commanders")
 		
