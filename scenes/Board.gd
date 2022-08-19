@@ -181,7 +181,7 @@ func setup_pieces():
 		newPiece.position = PlayerState.boardData[index].tile.coords * 64
 		for i in rand_range(1,10): 
 			var owner = floor(rand_range(0,3))
-			PlayerState.boardData[index].tile.commandersOnTile.append({"piece": newPiece})
+			PlayerState.boardData[index].tile.commandersOnTile.append(newPiece)
 			newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": { "obstacles": [4] }}
 			newPiece.tileId = PlayerState.boardData[index].tile.id
 			newPiece.tileCoords = PlayerState.boardData[index].tile.coords

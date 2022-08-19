@@ -29,28 +29,31 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 	
 	#if commander is clicked and movement is set, start moving yo
 	if PlayerState.playerState.clickActive == true && PlayerState.playerState.navigation.tileFrom:
-		PlayerState.boardData[PlayerState.playerState.activatedTileId].tile.commandersOnTile[0].piece.movePiece($Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position()))
+		PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[0].movePiece($Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position()))
+		$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
 	
 	#Select click state to commander if the tile has one that player owns
-	elif PlayerState.boardData[tileId].tile.commandersOnTile.size() > 0 && PlayerState.boardData[tileId].tile.commandersOnTile[0].piece.pieceInfo.owner == 0:
+	elif PlayerState.boardData[tileId].tile.commandersOnTile.size() > 0:
+		if PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.owner == 0:
 		
-		#set active
-		PlayerState.playerState.clickActive = true
-		PlayerState.playerState.activatedTileId = tileId
-		
-		#create tile obstacles TODO: set this based on piece pathfinding
-		setObstacles([5])
-		$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
-		$Board/ActiveTileMarker.visible = true
-		PlayerState.playerState.activeTile = tileId
-		PlayerState.playerState.navigation.active = true
-		PlayerState.playerState.navigation.tileFrom = PlayerState.boardData[tileId].tile.coords * 64
+			#set active
+			PlayerState.playerState.clickActive = true
+			PlayerState.playerState.activeTile = tileId
+			
+			#create tile obstacles TODO: set this based on piece pathfinding
+			setObstacles([5])
+			$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
+			$Board/ActiveTileMarker.visible = true
+			PlayerState.playerState.activeTile = tileId
+			PlayerState.playerState.navigation.active = true
+			PlayerState.playerState.navigation.tileFrom = PlayerState.boardData[tileId].tile.coords * 64
 	
 	#Deselect by default
 	elif PlayerState.boardData[tileId].tile.commandersOnTile.size() == 0:
 		PlayerState.playerState.clickActive = false
 		if $Board.has_node("activeIndicator"):
 			$Board/ActiveTileMarker.visible = false
+		$UserInterface/UnitCommanderContainer.runClear()
 
 
 func _on_tilemap_movement_signal(mouseCoords):

@@ -4,7 +4,7 @@ extends Node2D
 var playerStateDefault = { 
 	"activeTile": -1, 
 	"clickActive": false, 
-	"selectedCommander": -1, 
+	"selectedCommander": [0], 
 	"navigation": {
 		"active": false,
 		"tileFrom": Vector2(0,0),

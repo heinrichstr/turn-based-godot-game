@@ -41,6 +41,7 @@ func movePiece(navpoints):
 				tileCoords = navpoints[index+1]
 				tileId = newTileId
 				PlayerState.boardData[newTileId].tile.commandersOnTile.append(pieceInfo)
+				PlayerState.mainNode.get_node("UserInterface/UnitCommanderContainer").runClear()
 				var t = Timer.new()
 				t.set_wait_time(0.5)
 				t.set_one_shot(true)
@@ -48,6 +49,7 @@ func movePiece(navpoints):
 				t.start()
 				yield(t, "timeout")
 				t.queue_free()
+				
 				
 				#set movement and increment index for loop
 				
