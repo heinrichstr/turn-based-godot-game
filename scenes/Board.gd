@@ -1,5 +1,7 @@
 extends Node2D
-#pathfind with Dijkstra’s Algorithm to account for tile movement costs
+#Builds the board and handles data related to the board settings
+#Also houses astar node for the board pathfinding
+#Board data is housed in PlayerState singleton (PlayerVariables.gd)
 
 # Declare member variables here. Examples:
 var boardSize = Vector2(10,20)
@@ -179,12 +181,11 @@ func setup_pieces():
 		newPiece.board = self
 		newPiece.tileCoords = PlayerState.boardData[index].tile.coords
 		newPiece.position = PlayerState.boardData[index].tile.coords * 64
-		for i in rand_range(1,10): 
-			var owner = floor(rand_range(0,3))
-			PlayerState.boardData[index].tile.commandersOnTile.append(newPiece)
-			newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": { "obstacles": [4] }}
-			newPiece.tileId = PlayerState.boardData[index].tile.id
-			newPiece.tileCoords = PlayerState.boardData[index].tile.coords
+		var owner = floor(rand_range(0,3))
+		PlayerState.boardData[index].tile.commandersOnTile.append(newPiece)
+		newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": { "obstacles": [4] }}
+		newPiece.tileId = PlayerState.boardData[index].tile.id
+		newPiece.tileCoords = PlayerState.boardData[index].tile.coords
 		PlayerState.boardData[index].tile.topCommanderPiece = newPiece
 		PlayerState.boardData[index].tile.owner = 0
 		Pieces.add_child(newPiece)

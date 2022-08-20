@@ -26,6 +26,7 @@ func movePiece(navpoints):
 	for move in pieceInfo.movement:
 		if pieceInfo.movementRemaining > 0:
 			if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
+				#Move determined valid
 				PlayerState.playerState.clickActive = false
 				PlayerState.playerState.navigation.active = false
 				PlayerState.playerState.navigation.animationActive = true
@@ -40,8 +41,15 @@ func movePiece(navpoints):
 				position = navpoints[index+1] * 64
 				tileCoords = navpoints[index+1]
 				tileId = newTileId
-				PlayerState.boardData[newTileId].tile.commandersOnTile.append(pieceInfo)
+				PlayerState.boardData[newTileId].tile.commandersOnTile.insert(0,self)
 				PlayerState.mainNode.get_node("UserInterface/UnitCommanderContainer").runClear()
+				
+				#TODO: check if battle HERE, cancel if so
+				#for commander in PlayerState.boardData[newTileId].tile.commandersOnTile
+					#if commander.owner != self.owner
+						#fight me bish
+						#break out of this func
+				
 				var t = Timer.new()
 				t.set_wait_time(0.5)
 				t.set_one_shot(true)
@@ -50,10 +58,9 @@ func movePiece(navpoints):
 				yield(t, "timeout")
 				t.queue_free()
 				
-				
 				#set movement and increment index for loop
-				
 				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
 				index += 1
+	
 	board.get_parent().cancelNav()
 	PlayerState.playerState.navigation.animationActive = false

@@ -6,6 +6,7 @@ var playerStateDefault = {
 	"clickActive": false, 
 	"selectedCommander": [0], 
 	"navigation": {
+		"rightClickActive": false,
 		"active": false,
 		"tileFrom": Vector2(0,0),
 		"tileTo": Vector2(0,0),
