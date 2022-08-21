@@ -7,10 +7,14 @@ var tileCoords
 var tileId
 var pieceInfo #{"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	update()
+	print(ArmyData.commander.pumpkin.sprite)
+	print(pieceInfo)
+	var spriteRes = load(pieceInfo.sprite)
+	$AnimatedSprite.set_sprite_frames(spriteRes)
 
 func _draw(): #draw owner color on the board
 	#print(" *pieceOwner* ", pieceInfo)
@@ -43,6 +47,7 @@ func movePiece(navpoints):
 				tileId = newTileId
 				PlayerState.boardData[newTileId].tile.commandersOnTile.insert(0,self)
 				PlayerState.mainNode.get_node("UserInterface/UnitCommanderContainer").runClear()
+				PlayerState.mainNode.get_node("TileMove").play()
 				
 				#TODO: check if battle HERE, cancel if so
 				#for commander in PlayerState.boardData[newTileId].tile.commandersOnTile

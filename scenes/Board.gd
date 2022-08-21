@@ -183,7 +183,25 @@ func setup_pieces():
 		newPiece.position = PlayerState.boardData[index].tile.coords * 64
 		var owner = floor(rand_range(0,3))
 		PlayerState.boardData[index].tile.commandersOnTile.append(newPiece)
-		newPiece.pieceInfo = {"piece": newPiece, "owner": owner, "movement": 4, "movementRemaining": 4, "army": [], "unitData": { "obstacles": [4] }}
+		var pieceRando = floor(rand_range(0,2))
+		if pieceRando == 0:
+			newPiece.pieceInfo = {
+				"piece": newPiece, 
+				"owner": owner, 
+				"movement": ArmyData.commander.pumpkin.movement, 
+				"movementRemaining": ArmyData.commander.pumpkin.movement, 
+				"sprite": ArmyData.commander.pumpkin.sprite,
+				"army": [], 
+				"unitData": { "obstacles": ArmyData.commander.pumpkin.obstacles }}
+		else:
+			newPiece.pieceInfo = {
+				"piece": newPiece, 
+				"owner": owner, 
+				"movement": ArmyData.commander.mage.movement, 
+				"movementRemaining": ArmyData.commander.mage.movement, 
+				"sprite": ArmyData.commander.mage.sprite,
+				"army": [], 
+				"unitData": { "obstacles": ArmyData.commander.mage.obstacles }}
 		newPiece.tileId = PlayerState.boardData[index].tile.id
 		newPiece.tileCoords = PlayerState.boardData[index].tile.coords
 		PlayerState.boardData[index].tile.topCommanderPiece = newPiece

@@ -13,6 +13,8 @@ func _ready():
 #HELPER FUNCS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func setObstacles(tileIds): #array of int that corresponds to tilemap id's that aren't pathable
 	var obstacles = []
+	for i in PlayerState.boardData.size():
+		$Board.astar.set_point_disabled(i, false)
 	for id in tileIds:
 		var obstacleCoords = $Board/TileMap.get_used_cells_by_id(id)
 		for coords in obstacleCoords:
@@ -33,35 +35,37 @@ func cancelNav():
 #LEFT CLICK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func _on_tilemap_click_signal(tileId, clicked_cell):
 	$Modals.closeAllPopups()
-	
-	#Select click state to commander if the tile has one that player owns
-	if PlayerState.boardData[tileId].tile.commandersOnTile.size() > 0:
-		print(PlayerState.boardData[tileId].tile.commandersOnTile, PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo)
-		if PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.owner == 0:
+	if PlayerState.playerState.navigation.animationActive == false:
 		
-			#set active
-			PlayerState.playerState.clickActive = true
-			PlayerState.playerState.activeTile = tileId
+		#Select click state to commander if the tile has one that player owns
+		if PlayerState.boardData[tileId].tile.commandersOnTile.size() > 0 == true:
+			print(PlayerState.boardData[tileId].tile.commandersOnTile, PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo)
+			if PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.owner == 0:
 			
-			#create tile obstacles TODO: set this based on piece pathfinding
-			setObstacles([5])
-			$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
-			$Board/ActiveTileMarker.visible = true
-			PlayerState.playerState.activeTile = tileId
-			PlayerState.playerState.navigation.tileFrom = PlayerState.boardData[tileId].tile.coords * 64
-	
-	#Deselect by default
-	elif PlayerState.boardData[tileId].tile.commandersOnTile.size() == 0:
-		PlayerState.playerState.clickActive = false
-		if $Board.has_node("activeIndicator"):
-			$Board/ActiveTileMarker.visible = false
-		$UserInterface/UnitCommanderContainer.runClear()
-		cancelNav()
+				#set active
+				PlayerState.playerState.clickActive = true
+				PlayerState.playerState.activeTile = tileId
+				
+				#create tile obstacles TODO: change [0] to selected and set it to a for loop if more than one selected
+				print(PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.unitData.obstacles)
+				setObstacles(PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.unitData.obstacles)
+				$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
+				$Board/ActiveTileMarker.visible = true
+				PlayerState.playerState.activeTile = tileId
+				PlayerState.playerState.navigation.tileFrom = PlayerState.boardData[tileId].tile.coords * 64
+		
+		#Deselect by default
+		elif PlayerState.boardData[tileId].tile.commandersOnTile.size() == 0:
+			PlayerState.playerState.clickActive = false
+			if $Board.has_node("activeIndicator"):
+				$Board/ActiveTileMarker.visible = false
+			$UserInterface/UnitCommanderContainer.runClear()
+			cancelNav()
 
 
 #RIGHT CLICK DOWN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func _on_tilemap_dragNav_signal(mouseCoords):
-	if PlayerState.playerState.clickActive == true:
+	if PlayerState.playerState.clickActive:
 		print("drag on")
 		PlayerState.playerState.navigation.rightClickActive = true
 		PlayerState.playerState.navigation.active = true
@@ -94,9 +98,10 @@ func _on_tilemap_movement_signal(mouseCoords):
 
 #i CLICK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func _on_tilemap_info_signal(tile_data, clicked_cell, tile_id):
-	cancelNav()
-	print("popup signal received")
-	$Modals.showPopup(tile_data)
-	#show popup
+	if PlayerState.playerState.navigation.animationActive == false:
+		cancelNav()
+		print("popup signal received")
+		$Modals.showPopup(tile_data)
+		#show popup
 
 
