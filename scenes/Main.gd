@@ -39,7 +39,6 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 		
 		#Select click state to commander if the tile has one that player owns
 		if PlayerState.boardData[tileId].tile.commandersOnTile.size() > 0 == true:
-			print(PlayerState.boardData[tileId].tile.commandersOnTile, PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo)
 			if PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.owner == 0:
 			
 				#set active
@@ -47,7 +46,6 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 				PlayerState.playerState.activeTile = tileId
 				
 				#create tile obstacles TODO: change [0] to selected and set it to a for loop if more than one selected
-				print(PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.unitData.obstacles)
 				setObstacles(PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.unitData.obstacles)
 				$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
 				$Board/ActiveTileMarker.visible = true
@@ -66,7 +64,6 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 #RIGHT CLICK DOWN ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func _on_tilemap_dragNav_signal(mouseCoords):
 	if PlayerState.playerState.clickActive:
-		print("drag on")
 		PlayerState.playerState.navigation.rightClickActive = true
 		PlayerState.playerState.navigation.active = true
 		$Board/PathfindingMarker.clear()
@@ -76,7 +73,6 @@ func _on_tilemap_dragNav_signal(mouseCoords):
 
 #RIGHT CLICK UP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func _on_tilemap_dragRelease_signal(tileId, clicked_cell):
-	print("drag off")
 	#if board is animating, remove click control
 	if PlayerState.playerState.navigation.animationActive == true:
 		return

@@ -18,6 +18,7 @@ config/icon="res://assets/sprites/icon.png"
 
 PlayerState="*res://global/PlayerVariables.tscn"
 ArmyData="*res://global/ArmyData.tscn"
+TileInfo="*res://global/TileInfo.tscn"
 
 [display]
 

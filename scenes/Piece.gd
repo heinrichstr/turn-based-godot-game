@@ -6,6 +6,7 @@ var board
 var tileCoords
 var tileId
 var pieceInfo #{"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
+var fighting = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -28,7 +29,7 @@ func movePiece(navpoints):
 	var index = 0
 	
 	for move in pieceInfo.movement:
-		if pieceInfo.movementRemaining > 0:
+		if pieceInfo.movementRemaining > 0 && fighting == false:
 			if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
 				#Move determined valid
 				PlayerState.playerState.clickActive = false
@@ -50,10 +51,10 @@ func movePiece(navpoints):
 				PlayerState.mainNode.get_node("TileMove").play()
 				
 				#TODO: check if battle HERE, cancel if so
-				#for commander in PlayerState.boardData[newTileId].tile.commandersOnTile
-					#if commander.owner != self.owner
-						#fight me bish
-						#break out of this func
+				for commander in PlayerState.boardData[newTileId].tile.commandersOnTile:
+					if commander.pieceInfo.owner != pieceInfo.owner:
+						print("OH SHISH FITE ME BISH")
+						fighting = true
 				
 				var t = Timer.new()
 				t.set_wait_time(0.5)
