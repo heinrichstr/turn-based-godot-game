@@ -67,8 +67,10 @@ func _on_tilemap_dragNav_signal(mouseCoords):
 		PlayerState.playerState.navigation.rightClickActive = true
 		PlayerState.playerState.navigation.active = true
 		$Board/PathfindingMarker.clear()
-		$Board/PathfindingMarker.navPoints = $Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position())
-		$Board/PathfindingMarker.update()
+		var pathfindingNavPoints = $Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position())
+		var movementPoints = PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[PlayerState.playerState.selectedCommander[0]].pieceInfo.movement #TODO: loop through selected commander array and get lowest movement
+		var movementPointsRemaining = PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[PlayerState.playerState.selectedCommander[0]].pieceInfo.movementRemaining #TODO: loop through selected commander array and get lowest movement
+		$Board/PathfindingMarker.drawNav(pathfindingNavPoints, movementPoints, movementPointsRemaining)
 
 
 #RIGHT CLICK UP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
