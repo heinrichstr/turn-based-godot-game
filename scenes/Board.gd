@@ -8,24 +8,7 @@ var boardSize = Vector2(10,20)
 var tileSize = 64
 var boardPixelSize = Vector2(boardSize.x * tileSize, boardSize.y * tileSize)
 
-#array of dictionaries -> [{
-	#"pieces": [], 
-	#"tile": {
-		#id": int, 
-		#"coords": Vector2, 
-		#"terrain": int, 
-		#"fogOfWar": boolean, 
-		#"revealed": boolean, 
-		#"owner": int, 
-		#"commandersOnTile": [
-			#{
-				#"piece": Node2D, 
-				#"sprite": Node2D/AnimatedSprite, 
-				#"owner": int
-			#}
-		#]
-	#}
-#}]
+
 var rng = RandomNumberGenerator.new()
 var activeTile
 onready var Pieces = $Pieces
@@ -56,8 +39,10 @@ func freeAStarCell(vGlobalPosition:Vector2)->void:
 	 var idx=getTileIdByCoords(vCell)
 	 if astar.has_point(idx):astar.set_point_disabled(idx, false)
 func getPointCost(coords):
-	if ($TileMap.get_cellv(coords - Vector2(1,1)) == 5 || $TileMap.get_cellv(coords- Vector2(1,1)) == 6):
+	if $TileMap.get_cellv(coords - Vector2(1,1)) == 5:
 		return 2.0
+	elif $TileMap.get_cellv(coords- Vector2(1,1)) == 6:
+		return 3.0
 	else:
 		return 1.0
 
@@ -187,6 +172,7 @@ func setup_pieces():
 		if pieceRando == 0:
 			newPiece.pieceInfo = {
 				"piece": newPiece, 
+				"unit": "Pumpkin",
 				"owner": owner, 
 				"movement": ArmyData.commander.pumpkin.movement, 
 				"movementRemaining": ArmyData.commander.pumpkin.movement, 
@@ -196,6 +182,7 @@ func setup_pieces():
 		else:
 			newPiece.pieceInfo = {
 				"piece": newPiece, 
+				"unit": "Mage",
 				"owner": owner, 
 				"movement": ArmyData.commander.mage.movement, 
 				"movementRemaining": ArmyData.commander.mage.movement, 

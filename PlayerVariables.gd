@@ -18,6 +18,22 @@ var playerStateDefault = {
 var playerState = playerStateDefault
 
 var boardData = [] 
+#array of dictionaries -> [{
+	#"pieces": [], 
+	#"tile": {
+		#id": int, 
+		#"coords": Vector2, 
+		#"terrain": int, 
+		#"fogOfWar": boolean, 
+		#"revealed": boolean, 
+		#"owner": int, 
+		#"commandersOnTile": [
+			#{
+				#"piece": Node2D
+			#}
+		#]
+	#}
+#}]
 
 var boardNode
 var mainNode

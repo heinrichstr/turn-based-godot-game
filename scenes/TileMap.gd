@@ -37,7 +37,7 @@ func _unhandled_input(event): #grabs tile coords from tilemap, then maths out wh
 		var mouseCoords = get_global_mouse_position()
 		emit_signal("tilemapDragRelease", tileId, clicked_cell)
 	
-	elif (Input.is_action_pressed("key_i")):
+	elif (event.is_action_pressed("key_i")):
 		clicked_cell = world_to_map(get_global_mouse_position())
 		var tileId = clicked_cell.x + (clicked_cell.y * board.boardSize.y)
 		if(clicked_cell.x >= 0 && clicked_cell.x < board.boardSize.y && clicked_cell.y >= 0 && clicked_cell.y < board.boardSize.x):
