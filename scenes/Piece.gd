@@ -8,9 +8,9 @@ var tileId
 var pieceInfo #{"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
 var fighting = false
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
 	update()
 	#print(ArmyData.commander.pumpkin.sprite)
 	#print(pieceInfo)
@@ -67,6 +67,3 @@ func movePiece(navpoints):
 				#set movement and increment index for loop
 				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
 				index += 1
-	
-	board.get_parent().cancelNav()
-	PlayerState.playerState.navigation.animationActive = false

@@ -28,6 +28,7 @@ func cancelNav():
 	PlayerState.playerState.navigation.rightClickActive = false
 	PlayerState.playerState.navigation.tileFrom = Vector2(0,0)
 	PlayerState.playerState.navigation.tileTo = Vector2(0,0)
+	PlayerState.playerState.navigation.animationActive = false
 	$Board/PathfindingMarker.clear()
 	$Board/ActiveTileMarker.visible = false
 
@@ -81,7 +82,11 @@ func _on_tilemap_dragRelease_signal(tileId, clicked_cell):
 	
 	#if commander is clicked and movement is set, start moving yo
 	if PlayerState.playerState.clickActive == true && PlayerState.playerState.navigation.tileFrom:
-		PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[0].movePiece($Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position()))
+		yield(
+			PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[0].movePiece(
+				$Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position())
+			),
+			"completed")
 		$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
 		cancelNav()
 
@@ -94,6 +99,7 @@ func _on_tilemap_movement_signal(mouseCoords):
 		var movementPoints = PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[PlayerState.playerState.selectedCommander[0]].pieceInfo.movement #TODO: loop through selected commander array and get lowest movement
 		var movementPointsRemaining = PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[PlayerState.playerState.selectedCommander[0]].pieceInfo.movementRemaining #TODO: loop through selected commander array and get lowest movement
 		$Board/PathfindingMarker.drawNav(pathfindingNavPoints, movementPoints, movementPointsRemaining)
+
 
 #i CLICK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func _on_tilemap_info_signal(tile_data, clicked_cell, tile_id):

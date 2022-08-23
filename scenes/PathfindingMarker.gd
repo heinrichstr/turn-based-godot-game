@@ -6,29 +6,33 @@ var startingPoint = 0
 var endingPoint = 0
 var navPoints = []
 var pointCosts = []
+var font
 
 var drawPath = [[]]
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	font= DynamicFont.new()
+	font.font_data = load("res://assets/font/RobotoSlab-Bold.ttf")
+	font.size = 8
 
 
 func tileIdByCoords(coords):
 	return PlayerState.boardNode.getTileIdByCoords(coords)
 
 
-func _draw():
+func _draw(): #TODO: figure out how to draw from end of last array for index == 0 case
 	if drawPath[0].size() > 1:
+		print(drawPath)
 		var arrayIndex = 0
 		var tracker = 1
 		for turnNav in drawPath:
 			for index in turnNav.size():
-				if index == 0 && arrayIndex > 0:
-					drawNavLine(drawPath[arrayIndex][drawPath[arrayIndex].size() - 1], turnNav[index], Color(1* tracker,1* tracker,1* tracker,1))
-				if index > 0 && index < turnNav.size() -1:
-					drawNavLine(turnNav[index], turnNav[index + 1], Color(1* tracker,1* tracker,1* tracker,1))
+				if index + 1 < turnNav.size():
+					drawNavLine(turnNav[index], turnNav[index+1], Color(1* tracker,1* tracker,1* tracker,1), -1)
+				elif index + 1 == turnNav.size() &&  arrayIndex + 1 < drawPath.size():
+					drawNavLine(turnNav[index], drawPath[arrayIndex + 1][0], Color(1* tracker,1* tracker,1* tracker,1), arrayIndex)
 			arrayIndex += 1
 			tracker = tracker * .8
 
@@ -37,10 +41,11 @@ func clear():
 	startingPoint = 0
 	endingPoint = 0
 	navPoints = []
+	drawPath = [[]]
 	update()
 
 
-func drawNavLine(fromPoint, toPoint, color):
+func drawNavLine(fromPoint, toPoint, color, turn):
 	var tilePos = Vector2(
 		fromPoint.x * PlayerState.boardNode.tileSize + PlayerState.boardNode.tileSize / 2,
 		fromPoint.y * PlayerState.boardNode.tileSize + PlayerState.boardNode.tileSize / 2
@@ -61,8 +66,11 @@ func drawNavLine(fromPoint, toPoint, color):
 		true
 	)
 	draw_circle(tilePos,5,Color(0,0,0))
-
-
+	draw_circle(tilePos,3,Color(1,1,1))
+	if turn >= 0:
+		draw_circle(tilePos,15,Color(0,0,0))
+		draw_circle(tilePos,13,Color(.5,.5,.5))
+		draw_string(font, Vector2(0, 0), str(turn))
 
 
 func drawNav(points, baseMovement, movementRemaining):
@@ -78,12 +86,10 @@ func drawNav(points, baseMovement, movementRemaining):
 		var cost = PlayerState.boardNode.astar.get_point_weight_scale(navId)
 		pointCosts.append(cost)
 	
-	print("TILE COSTS: ", pointCosts)
-	
 	var arrayTracker = 0
 	var costTracker = movementRemaining
 	
-	for index in range(1, navPoints.size()):
+	for index in range(0, navPoints.size()):
 		
 		if (costTracker - pointCosts[index] < 0):
 			pass #break
@@ -96,6 +102,5 @@ func drawNav(points, baseMovement, movementRemaining):
 			drawPath[arrayTracker].append(navPoints[index])
 			costTracker -= pointCosts[index]
 	
-	print("draw path: ", drawPath)
 	update()
 
