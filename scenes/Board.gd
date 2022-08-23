@@ -200,7 +200,7 @@ func setup_pieces():
 
 func _on_TileArea2D_input_event(viewport, event, shape_idx, tile):
 	if (event is InputEventMouseButton && event.pressed && Input.is_action_pressed("left_click")):
-		print("click tile in board, ACTIVE TILE: ", tile, " OLD TILE: ", activeTile)
+		#print("click tile in board, ACTIVE TILE: ", tile, " OLD TILE: ", activeTile)
 		if activeTile:
 			activeTile.removeActive()
 		tile.setActive()

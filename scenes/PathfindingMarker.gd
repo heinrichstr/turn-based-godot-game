@@ -5,11 +5,9 @@ extends Node2D
 var startingPoint = 0
 var endingPoint = 0
 var navPoints = []
-var movement = 0
-var movementRemaining = 0
+var pointCosts = []
 
-var underCostPointPath = []
-var overCostPointPath = []
+var drawPath = [[]]
 
 
 # Called when the node enters the scene tree for the first time.
@@ -22,10 +20,17 @@ func tileIdByCoords(coords):
 
 
 func _draw():
-	#if navPoints
-		#draw a line from all points in undercost array with #fff
-		#draw a line from all points in overcost array with #888
-	pass
+	if drawPath[0].size() > 1:
+		var arrayIndex = 0
+		var tracker = 1
+		for turnNav in drawPath:
+			for index in turnNav.size():
+				if index == 0 && arrayIndex > 0:
+					drawNavLine(drawPath[arrayIndex][drawPath[arrayIndex].size() - 1], turnNav[index], Color(1* tracker,1* tracker,1* tracker,1))
+				if index > 0 && index < turnNav.size() -1:
+					drawNavLine(turnNav[index], turnNav[index + 1], Color(1* tracker,1* tracker,1* tracker,1))
+			arrayIndex += 1
+			tracker = tracker * .8
 
 
 func clear():
@@ -36,6 +41,18 @@ func clear():
 
 
 func drawNavLine(fromPoint, toPoint, color):
+	var tilePos = Vector2(
+		fromPoint.x * PlayerState.boardNode.tileSize + PlayerState.boardNode.tileSize / 2,
+		fromPoint.y * PlayerState.boardNode.tileSize + PlayerState.boardNode.tileSize / 2
+	)
+	
+	draw_line(
+		Vector2(fromPoint.x * 64 + 32, fromPoint.y * 64 + 32), 
+		Vector2(toPoint.x * 64 + 32, toPoint.y * 64 + 32), 
+		Color(0,0,0,1), 
+		5, 
+		true
+	)
 	draw_line(
 		Vector2(fromPoint.x * 64 + 32, fromPoint.y * 64 + 32), 
 		Vector2(toPoint.x * 64 + 32, toPoint.y * 64 + 32), 
@@ -43,39 +60,42 @@ func drawNavLine(fromPoint, toPoint, color):
 		3, 
 		true
 	)
+	draw_circle(tilePos,5,Color(0,0,0))
 
 
 
 
 func drawNav(points, baseMovement, movementRemaining):
-	
-	#Get all points
-	#for each point
-		#calculate the cost for each tile in the path from start to it
-		#add costs together
-		#check if cost is over current movement
-		#if under cost, add to under cost array
-		#if over cost, add to over cost array
-	
+	#create an array of arrays that have path information. Each array contains a single turn of movement
 	self.clear()
-	movement = baseMovement
-	movementRemaining = movementRemaining
+	drawPath = [[]]
+	movementRemaining
 	navPoints = points
-	for index in range(0, navPoints.size()-1):
-		var turnCost = 0
-		#compute cost
-		#var cost = PlayerState.boardNode.astar._compute_cost(tileIdByCoords(navPoints[0]), tileIdByCoords(navPoints[index]))
-		print("~~~~~~~~~~~~~~~~~")
-		print("nav index ", index)
-		print("NavPoints: ", navPoints)
+	pointCosts = []
+	
+	for index in range(0, navPoints.size()):
+		var navId = tileIdByCoords(navPoints[index])
+		var cost = PlayerState.boardNode.astar.get_point_weight_scale(navId)
+		pointCosts.append(cost)
+	
+	print("TILE COSTS: ", pointCosts)
+	
+	var arrayTracker = 0
+	var costTracker = movementRemaining
+	
+	for index in range(1, navPoints.size()):
 		
-		var pointsToCost = PlayerState.boardNode.astar.get_point_path(tileIdByCoords(navPoints[0]), tileIdByCoords(navPoints[index]))
-		print("Tile Cost FROM: ", tileIdByCoords(navPoints[0]), " TO: ", tileIdByCoords(navPoints[index]), " COSTS: ", pointsToCost)
+		if (costTracker - pointCosts[index] < 0):
+			pass #break
+			drawPath.append([])
+			arrayTracker += 1
+			drawPath[arrayTracker].append(navPoints[index])
+			costTracker = costTracker - pointCosts[index] + baseMovement
 		
-		
-		print("~~~~~~~~~~~~~~~~~")
-		if turnCost == 0:
-			drawNavLine(navPoints[index], navPoints[index + 1], Color(1,1,1,1))
 		else:
-			drawNavLine(navPoints[index], navPoints[index + 1], Color(.7,.7,.7,1))
+			drawPath[arrayTracker].append(navPoints[index])
+			costTracker -= pointCosts[index]
+	
+	print("draw path: ", drawPath)
+	update()
 

@@ -12,8 +12,8 @@ var fighting = false
 func _ready():
 	
 	update()
-	print(ArmyData.commander.pumpkin.sprite)
-	print(pieceInfo)
+	#print(ArmyData.commander.pumpkin.sprite)
+	#print(pieceInfo)
 	var spriteRes = load(pieceInfo.sprite)
 	$AnimatedSprite.set_sprite_frames(spriteRes)
 
