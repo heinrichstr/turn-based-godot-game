@@ -9,6 +9,7 @@ var pointCosts = []
 var font
 
 var drawPath = [[]]
+var turnPoints = []
 
 
 # Called when the node enters the scene tree for the first time.
@@ -29,12 +30,21 @@ func _draw(): #TODO: figure out how to draw from end of last array for index == 
 		var tracker = 1
 		for turnNav in drawPath:
 			for index in turnNav.size():
+				if index == 0 && arrayIndex + 1 < drawPath.size():
+					drawNavLine(turnNav[index], turnNav[index+1], Color(1* tracker,1* tracker,1* tracker,1), arrayIndex)
 				if index + 1 < turnNav.size():
 					drawNavLine(turnNav[index], turnNav[index+1], Color(1* tracker,1* tracker,1* tracker,1), -1)
-				elif index + 1 == turnNav.size() &&  arrayIndex + 1 < drawPath.size():
-					drawNavLine(turnNav[index], drawPath[arrayIndex + 1][0], Color(1* tracker,1* tracker,1* tracker,1), arrayIndex)
+				elif index + 1 == turnNav.size() && arrayIndex + 1 < drawPath.size():
+					drawNavLine(turnNav[index], drawPath[arrayIndex + 1][0], Color(1* tracker,1* tracker,1* tracker,1), -1)
 			arrayIndex += 1
 			tracker = tracker * .8
+	
+	if turnPoints:
+		for index in turnPoints.size():
+			draw_circle(turnPoints[index][0],15,Color(0,0,0))
+			draw_circle(turnPoints[index][0],13,Color(.5,.5,.5))
+			print("drawing circle for", turnPoints[index][1])
+			draw_string(font, turnPoints[index][0], str(turnPoints[index][1]))
 
 
 func clear():
@@ -42,6 +52,7 @@ func clear():
 	endingPoint = 0
 	navPoints = []
 	drawPath = [[]]
+	turnPoints = []
 	update()
 
 
@@ -68,9 +79,7 @@ func drawNavLine(fromPoint, toPoint, color, turn):
 	draw_circle(tilePos,5,Color(0,0,0))
 	draw_circle(tilePos,3,Color(1,1,1))
 	if turn >= 0:
-		draw_circle(tilePos,15,Color(0,0,0))
-		draw_circle(tilePos,13,Color(.5,.5,.5))
-		draw_string(font, Vector2(0, 0), str(turn))
+		turnPoints.append([tilePos, turn])
 
 
 func drawNav(points, baseMovement, movementRemaining):

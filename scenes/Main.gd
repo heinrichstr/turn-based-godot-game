@@ -82,13 +82,14 @@ func _on_tilemap_dragRelease_signal(tileId, clicked_cell):
 	
 	#if commander is clicked and movement is set, start moving yo
 	if PlayerState.playerState.clickActive == true && PlayerState.playerState.navigation.tileFrom:
-		yield(
-			PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[0].movePiece(
-				$Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position())
-			),
-			"completed")
-		$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
-		cancelNav()
+		if PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[0]:
+			yield(
+				PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile[0].movePiece(
+					$Board.getAStarPath(PlayerState.playerState.navigation.tileFrom,get_global_mouse_position())
+				),
+				"completed")
+			$Board/ActiveTileMarker.position = (PlayerState.boardData[tileId].tile.coords * 64) + Vector2($Board.tileSize / 2, $Board.tileSize / 2)
+			cancelNav()
 
 
 #MOUSE MOVE ON TILEMAP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
