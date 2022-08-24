@@ -7,6 +7,8 @@ var endingPoint = 0
 var navPoints = []
 var pointCosts = []
 var font
+onready var turnRing = "res://assets/sprites/turnRing.png"
+onready var turnRingSprite = load("res://scenes/TurnRing.tscn")
 
 var drawPath = [[]]
 var turnPoints = []
@@ -25,7 +27,6 @@ func tileIdByCoords(coords):
 
 func _draw(): #TODO: figure out how to draw from end of last array for index == 0 case
 	if drawPath[0].size() > 0:
-		print(drawPath)
 		var arrayIndex = 0
 		var tracker = 1
 		for turnNav in drawPath:
@@ -36,9 +37,6 @@ func _draw(): #TODO: figure out how to draw from end of last array for index == 
 				
 				#draw a line from current to next as long as there is a next
 				if turnNav.size() > index + 1:
-					print("turnNav: ", turnNav, " size ", turnNav.size())
-					print("Drawing from: ", turnNav[index], " at index ", index)
-					print("Drawing to: ", turnNav[index + 1])
 					drawNavLine(turnNav[index], turnNav[index + 1], Color(1* tracker,1* tracker,1* tracker,1), -1)
 				
 				#if next is in next array, draw to index 0 of next array (if it exists)
@@ -50,9 +48,13 @@ func _draw(): #TODO: figure out how to draw from end of last array for index == 
 	
 	if turnPoints:
 		for index in turnPoints.size():
-			draw_circle(turnPoints[index][0],15,Color(0,0,0))
-			draw_circle(turnPoints[index][0],13,Color(.5,.5,.5))
-			draw_string(font, turnPoints[index][0], str(turnPoints[index][1]))
+			#draw_circle(turnPoints[index][0],15,Color(0,0,0))
+			#draw_circle(turnPoints[index][0],13,Color(.5,.5,.5))
+			var circleScene = turnRingSprite.instance()
+			circleScene.position = turnPoints[index][0]
+			add_child(circleScene)
+			print("circle draw: ", circleScene, " ", PlayerState.boardNode.tileSize / 2, str(turnPoints[index][1]), Color(0,0,0))
+			circleScene.drawText(PlayerState.boardNode.tileSize / 2, str(turnPoints[index][1]), Color(0,0,0))
 
 
 func clear():
@@ -61,6 +63,8 @@ func clear():
 	navPoints = []
 	drawPath = [[]]
 	turnPoints = []
+	for child in get_children():
+		child.queue_free()
 	update()
 
 
