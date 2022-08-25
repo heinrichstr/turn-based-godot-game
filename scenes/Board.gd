@@ -27,6 +27,10 @@ func _ready():
 
 # ~~~~~~~~~~~ ASTAR PATHFINDING BEGIN~~~~~~~~~~~
 
+#TODO: create new astar class and override compute and estimate cost to always use 1 as a distance
+#https://godotengine.org/qa/87869/override-_compute_cost-_estimate_cost-astar2d-subclass
+#https://pastebin.com/dyVnagqX
+
 #astar helper functions
 func getTileIdByCoords(coords):
 	return coords.x + (coords.y * boardSize.y)
@@ -61,14 +65,14 @@ func pathfindingSetup():
 	for cell in PlayerState.boardData:
 		if ($TileMap.get_cellv((cell.tile.coords - Vector2(1,1))) != -1):
 			for vNeighborCell in [
-				Vector2(cell.tile.coords.x, cell.tile.coords.y - 1),
-				Vector2(cell.tile.coords.x, cell.tile.coords.y + 1),
-				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y),
-				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y),
 				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y - 1),
 				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y + 1),
 				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y + 1),
-				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y - 1)
+				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y - 1),
+				Vector2(cell.tile.coords.x, cell.tile.coords.y - 1),
+				Vector2(cell.tile.coords.x, cell.tile.coords.y + 1),
+				Vector2(cell.tile.coords.x - 1, cell.tile.coords.y),
+				Vector2(cell.tile.coords.x + 1, cell.tile.coords.y)
 			]:
 				var neighborTileId=getTileIdByCoords(vNeighborCell)
 				if astar.has_point(neighborTileId):
