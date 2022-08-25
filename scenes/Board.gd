@@ -8,13 +8,24 @@ var boardSize = Vector2(10,20)
 var tileSize = 64
 var boardPixelSize = Vector2(boardSize.x * tileSize, boardSize.y * tileSize)
 
-
 var rng = RandomNumberGenerator.new()
 var activeTile
 onready var Pieces = $Pieces
 onready var pieceScene = preload("res://scenes/Piece.tscn")
 
-onready var astar:AStar2D = AStar2D.new()
+#Astar custom class to work weights into tile based movement (make distance always 1 even if on diagonal
+#https://godotengine.org/qa/87869/override-_compute_cost-_estimate_cost-astar2d-subclass
+#https://pastebin.com/dyVnagqX
+class HyperAStar2D:
+	extends AStar2D
+
+	func _compute_cost(u : int, v : int):
+		return 1.0
+
+	func _estimate_cost(u : int, v : int):
+		return 1.0
+
+onready var astar:HyperAStar2D = HyperAStar2D.new()
 var path_start
 var path_end
 
@@ -27,9 +38,9 @@ func _ready():
 
 # ~~~~~~~~~~~ ASTAR PATHFINDING BEGIN~~~~~~~~~~~
 
-#TODO: create new astar class and override compute and estimate cost to always use 1 as a distance
-#https://godotengine.org/qa/87869/override-_compute_cost-_estimate_cost-astar2d-subclass
-#https://pastebin.com/dyVnagqX
+
+
+
 
 #astar helper functions
 func getTileIdByCoords(coords):
