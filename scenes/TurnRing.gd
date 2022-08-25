@@ -17,12 +17,10 @@ func _ready():
 func _draw():
 	#print(pos, " ", text, " ", color)
 	if pos:
-		print("drawing", text)
 		draw_string(font, Vector2(-1,3), text, color)
 	
 	
 func drawText(posi, texts, colors):
-	print("drawMe")
 	pos = posi
 	text = str(texts)
 	color = colors

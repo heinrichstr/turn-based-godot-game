@@ -11,6 +11,8 @@ var fighting = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$MovementCounter.movementRemaining = pieceInfo.movementRemaining
+	$MovementCounter.movement = pieceInfo.movement
 	update()
 	#print(ArmyData.commander.pumpkin.sprite)
 	#print(pieceInfo)
@@ -18,11 +20,16 @@ func _ready():
 	$AnimatedSprite.set_sprite_frames(spriteRes)
 
 func _draw(): #draw owner color on the board
-	#print(" *pieceOwner* ", pieceInfo)
+	var midpoint = PlayerState.boardNode.tileSize / 2
+	var tileSize = PlayerState.boardNode.tileSize
+	
 	if pieceInfo.owner == 0:
-		draw_rect(Rect2(Vector2(4,4), Vector2(54,54)), Color(1,.2,.2,pieceInfo.movementRemaining/pieceInfo.movement))
+		draw_circle(Vector2(1,1) * midpoint, tileSize * .4, Color(1, .2, .2, .7))
+		draw_arc(Vector2(1,1) * midpoint, tileSize * .4, 0, TAU, 360, Color(.8, .1, .1, 1), 3, true)
+		#draw_rect(Rect2(Vector2(4,4), Vector2(54,54)), Color(1,.2,.2,pieceInfo.movementRemaining/pieceInfo.movement))
 	else: #todo, add other owner colors
-		draw_rect(Rect2(Vector2(4,4), Vector2(54,54)), Color(.2,.2,1,.7))
+		draw_circle(Vector2(1,1) * midpoint, tileSize * .4, Color(.2,.2,1,.7))
+		draw_arc(Vector2(1,1) * midpoint, tileSize * .4, 0, TAU, 360, Color(.1, .1, .8, 1), 3, true)
 
 
 func movePiece(navpoints):
@@ -30,7 +37,8 @@ func movePiece(navpoints):
 	
 	for move in pieceInfo.movement:
 		if pieceInfo.movementRemaining > 0 && fighting == false:
-			if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
+			#if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
+			if index+1 < navpoints.size():
 				#Move determined valid
 				PlayerState.playerState.clickActive = false
 				PlayerState.playerState.navigation.active = false
@@ -67,3 +75,9 @@ func movePiece(navpoints):
 				#set movement and increment index for loop
 				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
 				index += 1
+				
+				#update movement counter visual with new info
+				$MovementCounter.movementRemaining = pieceInfo.movementRemaining
+				$MovementCounter.update()
+				
+	yield(get_tree(), "idle_frame") #this is to fix function finishing too fast for yield to fire in Main node, causing a crash

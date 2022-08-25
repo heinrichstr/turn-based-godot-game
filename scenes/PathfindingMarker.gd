@@ -53,7 +53,6 @@ func _draw(): #TODO: figure out how to draw from end of last array for index == 
 			var circleScene = turnRingSprite.instance()
 			circleScene.position = turnPoints[index][0]
 			add_child(circleScene)
-			print("circle draw: ", circleScene, " ", PlayerState.boardNode.tileSize / 2, str(turnPoints[index][1]), Color(0,0,0))
 			circleScene.drawText(PlayerState.boardNode.tileSize / 2, str(turnPoints[index][1]), Color(0,0,0))
 
 
@@ -96,7 +95,6 @@ func drawNavLine(fromPoint, toPoint, color, turn):
 func drawNav(points, baseMovement, movementRemaining):
 	#create an array of arrays that have path coords. Each array contains a single turn of movement
 	self.clear()
-	print("BASE NAV: ", points)
 	drawPath = [[]]
 	navPoints = points
 	pointCosts = []
