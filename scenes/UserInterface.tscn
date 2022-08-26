@@ -203,16 +203,23 @@ __meta__ = {
 [node name="UnitCommanderContainer" type="Control" parent="."]
 margin_left = 20.0
 margin_top = 100.0
-margin_right = 100.0
+margin_right = 95.0
 margin_bottom = 100.0
 script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="UnitCommanderList" type="VBoxContainer" parent="UnitCommanderContainer"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="ScrollContainer" type="ScrollContainer" parent="UnitCommanderContainer"]
+margin_right = 12.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 75, 700 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UnitCommanderList" type="VBoxContainer" parent="UnitCommanderContainer/ScrollContainer"]
+custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }

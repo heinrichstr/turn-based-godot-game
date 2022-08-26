@@ -21,18 +21,24 @@ func _process(delta):
 		if(PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile.size() > 0):
 			unitCommanderState.selected = PlayerState.playerState.selectedCommander
 			
+			
 			if unitCommanderState.commanders != PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile:
 				unitCommanderState.commanders = PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile
 				
-				for node in $UnitCommanderList.get_children():
+				for node in $ScrollContainer/UnitCommanderList.get_children():
 					node.queue_free()
 				
+				var index = 0
 				for commander in unitCommanderState.commanders:
+					print("commanders on tile ", unitCommanderState.commanders)
 					var selector = selectorScene.instance()
-					$UnitCommanderList.add_child(selector)
+					selector.commanderIndexOnTile = index
+					selector.buttonForCommander = unitCommanderState.commanders[index]
+					$ScrollContainer/UnitCommanderList.add_child(selector)
+					index += 1
 
 
 func runClear():
 	unitCommanderState.commanders = []
-	for node in $UnitCommanderList.get_children():
+	for node in $ScrollContainer/UnitCommanderList.get_children():
 		node.queue_free()
