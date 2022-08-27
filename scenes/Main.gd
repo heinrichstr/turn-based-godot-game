@@ -111,3 +111,4 @@ func _on_tilemap_info_signal(tile_data, clicked_cell, tile_id):
 		#show popup
 
 
+#SHIFT CLICK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

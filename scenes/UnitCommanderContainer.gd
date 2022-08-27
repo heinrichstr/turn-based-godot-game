@@ -14,6 +14,7 @@ onready var selectorScene = preload("res://scenes/UI/CommanderSelector.tscn")
 func _ready():
 	pass # Replace with function body.
 
+#pieceInfo.sprite
 
 func _process(delta):
 	if(PlayerState.playerState.clickActive == true):
@@ -34,6 +35,9 @@ func _process(delta):
 					var selector = selectorScene.instance()
 					selector.commanderIndexOnTile = index
 					selector.buttonForCommander = unitCommanderState.commanders[index]
+					selector.spriteFrames = commander.get_node("AnimatedSprite").frames
+					selector.id = index
+					selector.commanderListNode = $ScrollContainer/UnitCommanderList
 					$ScrollContainer/UnitCommanderList.add_child(selector)
 					index += 1
 

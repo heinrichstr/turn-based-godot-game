@@ -63,8 +63,7 @@ __meta__ = {
 }
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 37, 18 )
-scale = Vector2( 2, 2 )
+position = Vector2( 35, 35 )
 frames = SubResource( 9 )
 frame = 1
 playing = true
@@ -85,5 +84,3 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[connection signal="pressed" from="." to="." method="_on_CommanderSelector_pressed"]
