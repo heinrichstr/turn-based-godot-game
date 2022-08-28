@@ -44,6 +44,7 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 			
 				#set active
 				PlayerState.playerState.clickActive = true
+				PlayerState.playerState.selectedCommander = [0]
 				PlayerState.playerState.activeTile = tileId
 				
 				#create tile obstacles TODO: change [0] to selected and set it to a for loop if more than one selected
@@ -56,6 +57,7 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 		#Deselect by default
 		elif PlayerState.boardData[tileId].tile.commandersOnTile.size() == 0:
 			PlayerState.playerState.clickActive = false
+			PlayerState.playerState.selectedCommander = []
 			if $Board.has_node("activeIndicator"):
 				$Board/ActiveTileMarker.visible = false
 			$UserInterface/UnitCommanderContainer.runClear()

@@ -14,6 +14,9 @@ func _ready():
 	$Container/RichTextLabel.text += " " + str(commanderIndexOnTile)
 	$AnimatedSprite.set_sprite_frames(spriteFrames)
 	self.connect("pressed", self, "_on_CommanderSelector_pressed", [Input])
+	if PlayerState.playerState.selectedCommander.find(id) >= 0:
+		print("selected me")
+		self.pressed = true
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,12 +41,47 @@ func _ready():
 
 
 func _on_CommanderSelector_pressed(input):
+	#if shift
+		#if pressed
+			#remove this from pressed state
+			#depress self
+		
+		#if not pressed
+			#add this to pressed state
+			#press self
+	
+	#if no shift
+		#if pressed
+			#select self and only self
+		
+		#if not pressed
+	
+	print(self.pressed)
+	print(PlayerState.playerState.selectedCommander)
+	
+	#if clicking with shift to add
 	if input.is_action_pressed("key_shift"):
-		if PlayerState.playerState.selectedCommander.find(id) == -1:
+		if PlayerState.playerState.selectedCommander.size() <= 1 && PlayerState.playerState.selectedCommander.find(id) != -1:
+			self.pressed = true
+		elif PlayerState.playerState.selectedCommander.find(id) == -1:
 			PlayerState.playerState.selectedCommander.append(id)
+		else:
+			PlayerState.playerState.selectedCommander.remove(PlayerState.playerState.selectedCommander.find(id))
+			self.pressed = false
+	
+#	#if clicking to deselect
+#	elif self.pressed == true:
+#		for child in commanderListNode.get_children():
+#			child.pressed = false
+#		self.pressed = false
+#		PlayerState.playerState.selectedCommander = []
+	
+	#if clicking to reselect
 	else:
 		for child in commanderListNode.get_children():
 			child.pressed = false
 		self.pressed = true
 		PlayerState.playerState.selectedCommander = [id]
+	
 	print(PlayerState.playerState.selectedCommander)
+	print(self.pressed)
