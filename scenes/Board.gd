@@ -38,10 +38,6 @@ func _ready():
 
 # ~~~~~~~~~~~ ASTAR PATHFINDING BEGIN~~~~~~~~~~~
 
-
-
-
-
 #astar helper functions
 func getTileIdByCoords(coords):
 	return coords.x + (coords.y * boardSize.y)

@@ -50,6 +50,9 @@ func movePiece(navpoints):
 				PlayerState.boardData[tileId].tile.commandersOnTile.remove(0) #TODO: update this with remove by piece id number
 				
 				#move tile and set it data to the new tile
+				print("I'm node ", self)
+				print("I'm moving from ", tileId, " to ", newTileId)
+				print("From coords ", navpoints[index], " to ", navpoints[index + 1])
 				update()
 				position = navpoints[index+1] * 64
 				tileCoords = navpoints[index+1]
@@ -58,11 +61,30 @@ func movePiece(navpoints):
 				PlayerState.mainNode.get_node("UserInterface/UnitCommanderContainer").runClear()
 				PlayerState.mainNode.get_node("TileMove").play()
 				
+				
 				#TODO: check if battle HERE, cancel if so
 				for commander in PlayerState.boardData[newTileId].tile.commandersOnTile:
 					if commander.pieceInfo.owner != pieceInfo.owner:
 						print("OH SHISH FITE ME BISH")
-						fighting = true
+						for piece in PlayerState.boardData[tileId].tile.commandersOnTile:
+							piece.fighting = true
+							piece.visible = false
+						#TODO: signal to main to draw a fight indicator on the fight tile
+					
+					#TODO: check if any other commanders on the tile, set visible to false for all but the lowest position selected
+					else:
+						var pieceIndex = 0
+						for piece in PlayerState.boardData[tileId].tile.commandersOnTile:
+							if pieceIndex == 0:
+								piece.visible = true
+							else:
+								piece.visible = false
+							pieceIndex += 1
+					#TODO: Move this function to the Main node and have the piece signal to it when it moves
+						#Main or Board should handle drawing of the tiles
+				
+				
+				
 				
 				var t = Timer.new()
 				t.set_wait_time(0.5)

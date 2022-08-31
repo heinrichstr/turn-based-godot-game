@@ -15,7 +15,6 @@ func _ready():
 	$AnimatedSprite.set_sprite_frames(spriteFrames)
 	self.connect("pressed", self, "_on_CommanderSelector_pressed", [Input])
 	if PlayerState.playerState.selectedCommander.find(id) >= 0:
-		print("selected me")
 		self.pressed = true
 
 
@@ -41,20 +40,15 @@ func _ready():
 
 
 func _on_CommanderSelector_pressed(input):
-	#if shift
-		#if pressed
+	#if shift click
+		#if self.pressed
 			#remove this from pressed state
 			#depress self
-		
-		#if not pressed
+		#if not self.pressed
 			#add this to pressed state
 			#press self
-	
 	#if no shift
-		#if pressed
-			#select self and only self
-		
-		#if not pressed
+		#select self and only self
 	
 	print(self.pressed)
 	print(PlayerState.playerState.selectedCommander)
@@ -68,13 +62,6 @@ func _on_CommanderSelector_pressed(input):
 		else:
 			PlayerState.playerState.selectedCommander.remove(PlayerState.playerState.selectedCommander.find(id))
 			self.pressed = false
-	
-#	#if clicking to deselect
-#	elif self.pressed == true:
-#		for child in commanderListNode.get_children():
-#			child.pressed = false
-#		self.pressed = false
-#		PlayerState.playerState.selectedCommander = []
 	
 	#if clicking to reselect
 	else:
