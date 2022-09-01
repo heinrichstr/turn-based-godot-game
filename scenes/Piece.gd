@@ -7,10 +7,12 @@ var tileCoords
 var tileId
 var pieceInfo #{"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
 var fighting = false
+signal movementUpdate
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	self.connect("movementUpdate", PlayerState.boardNode, "_on_piece_movement_update")
 	$MovementCounter.movementRemaining = pieceInfo.movementRemaining
 	$MovementCounter.movement = pieceInfo.movement
 	update()
@@ -40,6 +42,7 @@ func movePiece(navpoints):
 			#if board.astar.get_point_weight_scale(tileId) <= pieceInfo.movementRemaining && index+1 < navpoints.size():
 			if index+1 < navpoints.size():
 				#Move determined valid
+				var oldTileId = tileId
 				PlayerState.playerState.clickActive = false
 				PlayerState.playerState.navigation.active = false
 				PlayerState.playerState.navigation.animationActive = true
@@ -53,6 +56,7 @@ func movePiece(navpoints):
 				print("I'm node ", self)
 				print("I'm moving from ", tileId, " to ", newTileId)
 				print("From coords ", navpoints[index], " to ", navpoints[index + 1])
+				print("~~~")
 				update()
 				position = navpoints[index+1] * 64
 				tileCoords = navpoints[index+1]
@@ -66,22 +70,16 @@ func movePiece(navpoints):
 				for commander in PlayerState.boardData[newTileId].tile.commandersOnTile:
 					if commander.pieceInfo.owner != pieceInfo.owner:
 						print("OH SHISH FITE ME BISH")
-						for piece in PlayerState.boardData[tileId].tile.commandersOnTile:
-							piece.fighting = true
-							piece.visible = false
+						fighting = true
+						emit_signal("movementUpdate", pieceInfo, tileId, oldTileId, fighting)
+#						for piece in PlayerState.boardData[tileId].tile.commandersOnTile:
+#							piece.fighting = true
+#							piece.visible = false
 						#TODO: signal to main to draw a fight indicator on the fight tile
 					
 					#TODO: check if any other commanders on the tile, set visible to false for all but the lowest position selected
 					else:
-						var pieceIndex = 0
-						for piece in PlayerState.boardData[tileId].tile.commandersOnTile:
-							if pieceIndex == 0:
-								piece.visible = true
-							else:
-								piece.visible = false
-							pieceIndex += 1
-					#TODO: Move this function to the Main node and have the piece signal to it when it moves
-						#Main or Board should handle drawing of the tiles
+						emit_signal("movementUpdate", pieceInfo, tileId, oldTileId, fighting)
 				
 				
 				

@@ -27,6 +27,7 @@ var boardData = []
 		#"fogOfWar": boolean, 
 		#"revealed": boolean, 
 		#"owner": int, 
+		#"fighting": false
 		#"commandersOnTile": [
 			#{
 				#"piece": Node2D

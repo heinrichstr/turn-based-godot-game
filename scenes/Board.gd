@@ -147,6 +147,7 @@ func setup_board():
 			"fogOfWar": false,
 			"revealed": true,
 			"owner": -1,
+			"fighting": false,
 			"commandersOnTile": [],
 			}
 		PlayerState.boardData[index].pieces = [] #reset pieces to empyty on start
@@ -218,3 +219,30 @@ func _on_TileArea2D_input_event(viewport, event, shape_idx, tile):
 		activeTile = tile
 		tile.update()
 		
+
+
+func _on_piece_movement_update(pieceInfo, tileId, oldTileId, fighting):
+	#how this process will work
+	#piece wants to move
+	#piece changes it's position
+	#piece tells the board it moved and if it moved into a fight
+	#board updates the visibility of pieces and draws a fight if fighting
+	
+	print("hey the signal worked")
+	print(pieceInfo)
+	print(tileId, " ", oldTileId, " ", fighting)
+	if fighting:
+		PlayerState.boardData[tileId].tile.fighting = true
+		for commander in PlayerState.boardData[tileId].tile.commandersOnTile:
+			commander.visible = false
+		
+		$BoardIndicators.set_cellv(PlayerState.boardData[tileId].tile.coords, 0)
+	
+	else:
+		var movementUpdateIndex = 0
+		for commander in PlayerState.boardData[tileId].tile.commandersOnTile:
+			if movementUpdateIndex == 0:
+				commander.visible = true
+			else:
+				commander.visible = false
+#
