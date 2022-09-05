@@ -254,4 +254,4 @@ func _on_piece_movement_update(pieceInfo, tileId, oldTileId, fighting):
 				commander.visible = true
 			else:
 				commander.visible = false
-#
+

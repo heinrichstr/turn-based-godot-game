@@ -12,6 +12,8 @@ func _ready():
 
 
 func _draw():
+	movementRemaining = get_node("../").pieceInfo.movementRemaining 
+	
 	var midpoint = PlayerState.boardNode.tileSize / 2
 	var tileSize = PlayerState.boardNode.tileSize
 	

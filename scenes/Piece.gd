@@ -97,6 +97,10 @@ func movePiece(navpoints):
 					else:
 						emit_signal("movementUpdate", pieceInfo, tileId, oldTileId, fighting)
 				
+				#set movement and increment index for loop
+				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
+				index += 1
+				
 				var t = Timer.new()
 				t.set_wait_time(0.5)
 				t.set_one_shot(true)
@@ -105,12 +109,7 @@ func movePiece(navpoints):
 				yield(t, "timeout")
 				t.queue_free()
 				
-				#set movement and increment index for loop
-				pieceInfo.movementRemaining -= board.astar.get_point_weight_scale(tileId)
-				index += 1
-				
 				#update movement counter visual with new info
-				$MovementCounter.movementRemaining = pieceInfo.movementRemaining
 				$MovementCounter.update()
 				
 	yield(get_tree(), "idle_frame") #this is to fix function finishing too fast for yield to fire in Main node, causing a crash
