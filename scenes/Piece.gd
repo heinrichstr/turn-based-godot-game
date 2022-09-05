@@ -1,11 +1,25 @@
 extends Node2D
 
 
+#newPiece.pieceInfo = {
+#	"piece": newPiece, 
+#	"unit": "Pumpkin",
+#	"owner": owner, 
+#	"movement": ArmyData.commander.pumpkin.movement, 
+#	"movementRemaining": ArmyData.commander.pumpkin.movement, 
+#	"sprite": ArmyData.commander.pumpkin.sprite,
+#	"army": [], 
+#	"unitData": { 
+#		"obstacles": ArmyData.commander.pumpkin.obstacles, 
+#		"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))] 
+#	}
+#}
+
 # Declare member variables here. Examples:
 var board
 var tileCoords
 var tileId
-var pieceInfo #{"piece": newPiece, "sprite": newPiece.get_node("AnimatedSprite"), "owner": owner, "movement": 4, "movementRemaining": 4}
+var pieceInfo 
 var fighting = false
 signal movementUpdate
 
@@ -65,24 +79,23 @@ func movePiece(navpoints):
 				PlayerState.mainNode.get_node("UserInterface/UnitCommanderContainer").runClear()
 				PlayerState.mainNode.get_node("TileMove").play()
 				
-				
-				#TODO: check if battle HERE, cancel if so
+				#Check if battle on new tile, send signal to board that the piece moved
 				for commander in PlayerState.boardData[newTileId].tile.commandersOnTile:
 					if commander.pieceInfo.owner != pieceInfo.owner:
-						print("OH SHISH FITE ME BISH")
 						fighting = true
 						emit_signal("movementUpdate", pieceInfo, tileId, oldTileId, fighting)
-#						for piece in PlayerState.boardData[tileId].tile.commandersOnTile:
-#							piece.fighting = true
-#							piece.visible = false
-						#TODO: signal to main to draw a fight indicator on the fight tile
+						var t = Timer.new()
+						t.set_wait_time(0.5)
+						t.set_one_shot(true)
+						self.add_child(t)
+						t.start()
+						yield(t, "timeout")
+						t.queue_free()
+						return
 					
 					#TODO: check if any other commanders on the tile, set visible to false for all but the lowest position selected
 					else:
 						emit_signal("movementUpdate", pieceInfo, tileId, oldTileId, fighting)
-				
-				
-				
 				
 				var t = Timer.new()
 				t.set_wait_time(0.5)

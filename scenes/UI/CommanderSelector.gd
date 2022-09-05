@@ -13,6 +13,7 @@ var commanderListNode
 func _ready():
 	$Container/RichTextLabel.text += " " + str(commanderIndexOnTile)
 	$AnimatedSprite.set_sprite_frames(spriteFrames)
+	$MovePointsUI/MovePointsUILabel.text = str(buttonForCommander.pieceInfo.movementRemaining)
 	self.connect("pressed", self, "_on_CommanderSelector_pressed", [Input])
 	if PlayerState.playerState.selectedCommander.find(id) >= 0:
 		self.pressed = true

@@ -108,7 +108,6 @@ func _on_tilemap_movement_signal(mouseCoords):
 func _on_tilemap_info_signal(tile_data, clicked_cell, tile_id):
 	if PlayerState.playerState.navigation.animationActive == false:
 		cancelNav()
-		print("popup signal received")
 		$Modals.showPopup(tile_data)
 		#show popup
 

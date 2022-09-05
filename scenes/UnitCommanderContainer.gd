@@ -16,7 +16,7 @@ func _ready():
 
 #pieceInfo.sprite
 
-func _process(delta):
+func _process(_delta):
 	if(PlayerState.playerState.clickActive == true):
 		#$UnitCommanderList.add_child()
 		if(PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile.size() > 0):
@@ -31,15 +31,17 @@ func _process(delta):
 				
 				var index = 0
 				for commander in unitCommanderState.commanders:
-					print("commanders on tile ", unitCommanderState.commanders)
-					var selector = selectorScene.instance()
-					selector.commanderIndexOnTile = index
-					selector.buttonForCommander = unitCommanderState.commanders[index]
-					selector.spriteFrames = commander.get_node("AnimatedSprite").frames
-					selector.id = index
-					selector.commanderListNode = $ScrollContainer/UnitCommanderList
-					$ScrollContainer/UnitCommanderList.add_child(selector)
-					index += 1
+					if commander.pieceInfo.owner == 0:
+						print("commanders on tile ", unitCommanderState.commanders)
+						var selector = selectorScene.instance()
+						selector.commanderIndexOnTile = index
+						selector.buttonForCommander = unitCommanderState.commanders[index]
+						selector.spriteFrames = commander.get_node("AnimatedSprite").frames
+						selector.id = index
+						selector.commanderListNode = $ScrollContainer/UnitCommanderList
+						selector.get_node("Container/RichTextLabel").text = commander.pieceInfo.unitData.name
+						$ScrollContainer/UnitCommanderList.add_child(selector)
+						index += 1
 
 
 func runClear():

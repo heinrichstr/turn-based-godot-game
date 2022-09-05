@@ -11,6 +11,19 @@ func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func endTurn():
+	print("end turn")
+	var fightingTiles = []
+	var fightingTilesString = ""
+	var index = 0
+	print(PlayerState.boardData[1])
+	
+	for tile in PlayerState.boardData:
+		if tile.tile.fighting:
+			fightingTiles.append(index)
+		index += 1
+	
+	for i in fightingTiles:
+		fightingTilesString += str(i) + " "
+	
+	print("Fighting in tiles: ", fightingTilesString)

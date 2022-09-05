@@ -190,7 +190,11 @@ func setup_pieces():
 				"movementRemaining": ArmyData.commander.pumpkin.movement, 
 				"sprite": ArmyData.commander.pumpkin.sprite,
 				"army": [], 
-				"unitData": { "obstacles": ArmyData.commander.pumpkin.obstacles }}
+				"unitData": { 
+					"obstacles": ArmyData.commander.pumpkin.obstacles, 
+					"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))] 
+				}
+			}
 		else:
 			newPiece.pieceInfo = {
 				"piece": newPiece, 
@@ -200,7 +204,11 @@ func setup_pieces():
 				"movementRemaining": ArmyData.commander.mage.movement, 
 				"sprite": ArmyData.commander.mage.sprite,
 				"army": [], 
-				"unitData": { "obstacles": ArmyData.commander.mage.obstacles }}
+				"unitData": { 
+					"obstacles": ArmyData.commander.pumpkin.obstacles, 
+					"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))] 
+				}
+			}
 		newPiece.tileId = PlayerState.boardData[index].tile.id
 		newPiece.tileCoords = PlayerState.boardData[index].tile.coords
 		PlayerState.boardData[index].tile.topCommanderPiece = newPiece
@@ -222,19 +230,20 @@ func _on_TileArea2D_input_event(viewport, event, shape_idx, tile):
 
 
 func _on_piece_movement_update(pieceInfo, tileId, oldTileId, fighting):
-	#how this process will work
-	#piece wants to move
-	#piece changes it's position
-	#piece tells the board it moved and if it moved into a fight
-	#board updates the visibility of pieces and draws a fight if fighting
+	#How this gets called:
+		#Piece.tscn wants to move
+		#Piece.tscn changes it's position
+		#Piece.tscn tells the board it moved and if it moved into a fight
+		#TODO: Board updates the visibility of Piece.tscn's on the tile and draws a fight if fighting
+		#Board updates the board node if there is a fight on the tile
 	
-	print("hey the signal worked")
 	print(pieceInfo)
 	print(tileId, " ", oldTileId, " ", fighting)
 	if fighting:
 		PlayerState.boardData[tileId].tile.fighting = true
 		for commander in PlayerState.boardData[tileId].tile.commandersOnTile:
 			commander.visible = false
+			commander.pieceInfo.movementRemaining = 0
 		
 		$BoardIndicators.set_cellv(PlayerState.boardData[tileId].tile.coords, 0)
 	

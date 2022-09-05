@@ -17,4 +17,4 @@ func _ready():
 
 
 func _on_TextureButton_pressed():
-	get_tree().get_root().get_node("Main/Board").setupGame()
+	PlayerState.mainNode.get_node("endTurnScript").endTurn()
