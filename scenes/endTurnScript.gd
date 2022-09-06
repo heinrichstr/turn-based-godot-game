@@ -16,6 +16,9 @@ func endTurn():
 	print("END TURN")
 	print("~~~~~~~~")
 	
+	#Reset input variables ~~~~~~~~~~~~~~~~~~~~~
+	PlayerState.mainNode.cancelNav()
+	
 	
 	#Reset Commander Movement ~~~~~~~~~~~~~~~~~~~~~
 	
@@ -44,6 +47,8 @@ func endTurn():
 		var newCommanders = []
 		var commanderIndex = 0
 		
+		#Determine fight here
+		#TODO: fight script
 		for commander in PlayerState.boardData[tileIndex].tile.commandersOnTile:
 			if commander.pieceInfo.owner == 0:
 				newCommanders.append(commander)
@@ -52,4 +57,8 @@ func endTurn():
 			commanderIndex += 1
 		
 		PlayerState.boardData[tileIndex].tile.commandersOnTile = newCommanders
+		PlayerState.boardData[tileIndex].tile.commandersOnTile[0].visible = true
+		PlayerState.boardNode.get_node("BoardIndicators").set_cellv(PlayerState.boardData[tileIndex].tile.coords, 1)
+	
+	
 	

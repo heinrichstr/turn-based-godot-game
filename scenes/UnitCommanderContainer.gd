@@ -22,7 +22,6 @@ func _process(_delta):
 		if(PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile.size() > 0):
 			unitCommanderState.selected = PlayerState.playerState.selectedCommander
 			
-			
 			if unitCommanderState.commanders != PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile:
 				unitCommanderState.commanders = PlayerState.boardData[PlayerState.playerState.activeTile].tile.commandersOnTile
 				
@@ -32,7 +31,6 @@ func _process(_delta):
 				var index = 0
 				for commander in unitCommanderState.commanders:
 					if commander.pieceInfo.owner == 0:
-						print("commanders on tile ", unitCommanderState.commanders)
 						var selector = selectorScene.instance()
 						selector.commanderIndexOnTile = index
 						selector.buttonForCommander = unitCommanderState.commanders[index]

@@ -237,8 +237,6 @@ func _on_piece_movement_update(pieceInfo, tileId, oldTileId, fighting):
 		#TODO: Board updates the visibility of Piece.tscn's on the tile and draws a fight if fighting
 		#Board updates the board node if there is a fight on the tile
 	
-	print(pieceInfo)
-	print(tileId, " ", oldTileId, " ", fighting)
 	if fighting:
 		PlayerState.boardData[tileId].tile.fighting = true
 		for commander in PlayerState.boardData[tileId].tile.commandersOnTile:

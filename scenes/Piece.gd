@@ -69,7 +69,7 @@ func movePiece(navpoints):
 				#move tile and set it data to the new tile
 				print("I'm node ", self)
 				print("I'm moving from ", tileId, " to ", newTileId)
-				print("From coords ", navpoints[index], " to ", navpoints[index + 1])
+#				print("From coords ", navpoints[index], " to ", navpoints[index + 1])
 				print("~~~")
 				update()
 				position = navpoints[index+1] * 64
