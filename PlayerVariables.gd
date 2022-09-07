@@ -1,5 +1,17 @@
 extends Node2D
 
+var gameState = {
+	"turn": 0,
+	"season": 0,
+	"resources": {
+		"gold": 50,
+		"iron": 5,
+		"magic": 0,
+		"goldPerTurn": 5,
+		"ironPerTurn": 1,
+		"magicPerTurn": 0
+	}
+}
 
 var playerStateDefault = { 
 	"activeTile": -1, 

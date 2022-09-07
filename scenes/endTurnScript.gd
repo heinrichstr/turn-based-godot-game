@@ -2,13 +2,22 @@ extends Node2D
 
 
 # Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
+signal end_turn_UI_signal
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	get_tree().get_root().get_node("Main/UserInterface").connect("end_turn_UI_signal", self, "_on_end_turn")
+	
+
+func handle_age():
+	PlayerState.gameState.turn += 1
+	if PlayerState.gameState.season == 3:
+		PlayerState.gameState.season = 0
+	else:
+		PlayerState.gameState.season += 1
+	
+	#let the UI know its a new turn
+	emit_signal("end_turn_UI_signal")
 
 
 func endTurn():
@@ -52,6 +61,8 @@ func endTurn():
 		for commander in PlayerState.boardData[tileIndex].tile.commandersOnTile:
 			if commander.pieceInfo.owner == 0:
 				newCommanders.append(commander)
+				commander.fighting = false
+				PlayerState.boardData[tileIndex].tile.fighting = false
 			else:
 				commander.queue_free()
 			commanderIndex += 1
@@ -61,4 +72,5 @@ func endTurn():
 		PlayerState.boardNode.get_node("BoardIndicators").set_cellv(PlayerState.boardData[tileIndex].tile.coords, 1)
 	
 	
-	
+	# Update the turn and age ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	handle_age()

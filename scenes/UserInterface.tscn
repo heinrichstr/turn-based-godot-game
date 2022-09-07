@@ -28,17 +28,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MarginContainer" type="NinePatchRect" parent="TopBar"]
+[node name="AgeContainer" type="NinePatchRect" parent="TopBar"]
 margin_right = 200.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 0 )
 
-[node name="Label" type="Label" parent="TopBar/MarginContainer"]
+[node name="Label" type="Label" parent="TopBar/AgeContainer"]
 margin_right = 86.0
 margin_bottom = 40.0
 size_flags_vertical = 3
 custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "Age: Summer"
+text = "Turn: 0 | Season: Spring"
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -50,7 +50,7 @@ margin_right = 344.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 140, 0 )
 
-[node name="TextureRect" type="TextureRect" parent="TopBar/Gold"]
+[node name="GoldSprite" type="TextureRect" parent="TopBar/Gold"]
 margin_left = 6.0
 margin_top = 5.0
 margin_right = 36.0
@@ -80,7 +80,7 @@ margin_right = 488.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 140, 0 )
 
-[node name="TextureRect" type="TextureRect" parent="TopBar/Iron"]
+[node name="IronSprite" type="TextureRect" parent="TopBar/Iron"]
 margin_left = 6.0
 margin_top = 5.0
 margin_right = 36.0
@@ -93,7 +93,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GoldLabel" type="Label" parent="TopBar/Iron"]
+[node name="IronLabel" type="Label" parent="TopBar/Iron"]
 margin_left = 46.0
 margin_top = 13.0
 margin_right = 90.0
@@ -110,7 +110,7 @@ margin_right = 632.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 140, 0 )
 
-[node name="TextureRect" type="TextureRect" parent="TopBar/Magic"]
+[node name="MagicSprite" type="TextureRect" parent="TopBar/Magic"]
 margin_left = 6.0
 margin_top = 5.0
 margin_right = 36.0
@@ -123,7 +123,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GoldLabel" type="Label" parent="TopBar/Magic"]
+[node name="MagicLabel" type="Label" parent="TopBar/Magic"]
 margin_left = 46.0
 margin_top = 13.0
 margin_right = 90.0

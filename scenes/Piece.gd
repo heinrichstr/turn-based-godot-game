@@ -50,6 +50,7 @@ func _draw(): #draw owner color on the board
 
 func movePiece(navpoints):
 	var index = 0
+	print("movement called ", self)
 	
 	for move in pieceInfo.movement:
 		if pieceInfo.movementRemaining > 0 && fighting == false:
