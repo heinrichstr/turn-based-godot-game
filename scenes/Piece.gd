@@ -42,10 +42,14 @@ func _draw(): #draw owner color on the board
 	if pieceInfo.owner == 0:
 		draw_circle(Vector2(1,1) * midpoint, tileSize * .4, Color(1, .2, .2, .7))
 		draw_arc(Vector2(1,1) * midpoint, tileSize * .4, 0, TAU, 360, Color(.8, .1, .1, 1), 3, true)
-		#draw_rect(Rect2(Vector2(4,4), Vector2(54,54)), Color(1,.2,.2,pieceInfo.movementRemaining/pieceInfo.movement))
-	else: #todo, add other owner colors
+		
+	elif pieceInfo.owner == 1:
 		draw_circle(Vector2(1,1) * midpoint, tileSize * .4, Color(.2,.2,1,.7))
 		draw_arc(Vector2(1,1) * midpoint, tileSize * .4, 0, TAU, 360, Color(.1, .1, .8, 1), 3, true)
+		
+	else: #todo, add other owner colors
+		draw_circle(Vector2(1,1) * midpoint, tileSize * .4, Color(.2,1,.6,.7))
+		draw_arc(Vector2(1,1) * midpoint, tileSize * .4, 0, TAU, 360, Color(.2, .8, .5, 1), 3, true)
 
 
 func movePiece(navpoints):

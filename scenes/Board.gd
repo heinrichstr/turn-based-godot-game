@@ -33,6 +33,8 @@ var path_end
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	PlayerState.boardNode = self
+	if PlayerState.mainNode == null:
+		PlayerState.mainNode = get_parent()
 	setupGame()
 
 
@@ -212,9 +214,10 @@ func setup_pieces():
 		newPiece.tileId = PlayerState.boardData[index].tile.id
 		newPiece.tileCoords = PlayerState.boardData[index].tile.coords
 		PlayerState.boardData[index].tile.topCommanderPiece = newPiece
-		PlayerState.boardData[index].tile.owner = 0
+		PlayerState.boardData[index].tile.owner = owner
 		Pieces.add_child(newPiece)
 		newPiece.add_to_group("commanders")
+		PlayerState.mainNode.updateBoardData(newPiece.tileId, "owner", owner)
 		
 
 
@@ -243,9 +246,11 @@ func _on_piece_movement_update(pieceInfo, tileId, oldTileId, fighting):
 			commander.visible = false
 			commander.pieceInfo.movementRemaining = 0
 		
+		PlayerState.mainNode.updateBoardData(tileId,"owner", -1)
 		$BoardIndicators.set_cellv(PlayerState.boardData[tileId].tile.coords, 0)
 	
 	else:
+		PlayerState.mainNode.updateBoardData(tileId,"owner", pieceInfo.owner)
 		var movementUpdateIndex = 0
 		for commander in PlayerState.boardData[tileId].tile.commandersOnTile:
 			if movementUpdateIndex == 0:

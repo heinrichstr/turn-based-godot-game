@@ -2,13 +2,14 @@ extends Node2D
 #Handles actions taken by the player on the board
 
 func _ready():
+	PlayerState.mainNode = self
+	
 	get_node("Board/TileMap").connect("tilemapClick", self, "_on_tilemap_click_signal")
 	get_node("Board/TileMap").connect("tilemapMotion", self, "_on_tilemap_movement_signal")
 	get_node("Board/TileMap").connect("tilemapInfo", self, "_on_tilemap_info_signal")
 	get_node("Board/TileMap").connect("tilemapDragNav", self, "_on_tilemap_dragNav_signal")
 	get_node("Board/TileMap").connect("tilemapDragRelease", self, "_on_tilemap_dragRelease_signal")
-	
-	PlayerState.mainNode = self
+
 
 #HELPER FUNCS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 func setObstacles(tileIds): #array of int that corresponds to tilemap id's that aren't pathable
@@ -31,6 +32,33 @@ func cancelNav():
 	PlayerState.playerState.navigation.animationActive = false
 	$Board/PathfindingMarker.clear()
 	$Board/ActiveTileMarker.visible = false
+
+#Gives the ability to chain functions if the visual board needs to update when data changes
+	#handles calls, but does not actively make the change
+func updateBoardData(tile, keyToUpdate, dataToUpdate):
+	if keyToUpdate == "fogOfWar":
+		PlayerState.boardData[tile].fogOfWar = dataToUpdate
+		#Call tile update signal
+		
+	elif keyToUpdate == "terrain":
+		PlayerState.boardData[tile].terrain = dataToUpdate
+		#Call tile update signal\
+		
+	elif keyToUpdate == "revealed":
+		PlayerState.boardData[tile].revealed = dataToUpdate
+		#Call tile update signal\
+		
+	elif keyToUpdate == "owner":
+		PlayerState.boardData[tile].owner = dataToUpdate
+		$boardHelperScript._update_Board_Owner(tile, dataToUpdate)
+		
+	elif keyToUpdate == "fighting":
+		PlayerState.boardData[tile].fighting = dataToUpdate
+		#Call tile update signal\
+		
+	elif keyToUpdate == "commandersOnTile":
+		PlayerState.boardData[tile].commandersOnTile = dataToUpdate
+		#Call tile update signal\
 
 
 #LEFT CLICK ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

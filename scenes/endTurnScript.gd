@@ -63,6 +63,7 @@ func endTurn():
 				newCommanders.append(commander)
 				commander.fighting = false
 				PlayerState.boardData[tileIndex].tile.fighting = false
+				PlayerState.mainNode.updateBoardData(tileIndex, "owner", commander.pieceInfo.owner)
 			else:
 				commander.queue_free()
 			commanderIndex += 1
