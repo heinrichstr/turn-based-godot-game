@@ -11,7 +11,9 @@ extends Node2D
 #	"army": [], 
 #	"unitData": { 
 #		"obstacles": ArmyData.commander.pumpkin.obstacles, 
-#		"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))] 
+#		"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))],
+#		"nation", "string"
+#		"actions": ["string",]
 #	}
 #}
 

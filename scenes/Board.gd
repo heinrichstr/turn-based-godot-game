@@ -166,6 +166,8 @@ func setup_board():
 
 #build pieces randomly on the board
 #TODO: break into neutrals setup, npc setup, and player setup
+#TODO: have this pull data from a "nation" node that has a dataset specifically to starting setup
+	#This method should just pull from the nation's setups and place them on the board and populate the boardData dictionary
 func setup_pieces():
 	var pieceRandomized = []
 	for _i in range(0, 10):
@@ -194,7 +196,9 @@ func setup_pieces():
 				"army": [], 
 				"unitData": { 
 					"obstacles": ArmyData.commander.pumpkin.obstacles, 
-					"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))] 
+					"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))],
+					"nation": "neutral",
+					"actions": ["build"] 
 				}
 			}
 		else:
@@ -208,7 +212,9 @@ func setup_pieces():
 				"army": [], 
 				"unitData": { 
 					"obstacles": ArmyData.commander.pumpkin.obstacles, 
-					"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))] 
+					"name": NameList.unitNames.neutralNames[floor(rand_range(0,NameList.unitNames.neutralNames.size()))],
+					"nation": "neutral",
+					"actions": ["build", "cast"] 
 				}
 			}
 		newPiece.tileId = PlayerState.boardData[index].tile.id

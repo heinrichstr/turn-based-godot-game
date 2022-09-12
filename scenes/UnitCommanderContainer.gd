@@ -39,6 +39,10 @@ func _process(_delta):
 						selector.commanderListNode = $ScrollContainer/UnitCommanderList
 						selector.get_node("Container/RichTextLabel").text = commander.pieceInfo.unitData.name
 						$ScrollContainer/UnitCommanderList.add_child(selector)
+						
+						for action in commander.pieceInfo.unitData.actions:
+							get_node("../ActionMenu").create_action(action)
+						
 						index += 1
 
 

@@ -69,6 +69,8 @@ func _on_tilemap_click_signal(tileId, clicked_cell):
 		#Select click state to commander if the tile has one that player owns
 		if PlayerState.boardData[tileId].tile.commandersOnTile.size() > 0 == true:
 			if PlayerState.boardData[tileId].tile.commandersOnTile[0].pieceInfo.owner == 0:
+				#clear action menu
+				$UserInterface/ActionMenu.clear_action_menu()
 			
 				#set active
 				PlayerState.playerState.clickActive = true
