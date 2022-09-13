@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/sprites/iron.png" type="Texture" id=1]
 [ext_resource path="res://scenes/CameraDummy.gd" type="Script" id=2]
@@ -8,7 +8,8 @@
 [ext_resource path="res://scenes/UserInterface.gd" type="Script" id=6]
 [ext_resource path="res://scenes/TextureButton.gd" type="Script" id=7]
 [ext_resource path="res://scenes/UnitCommanderContainer.gd" type="Script" id=8]
-[ext_resource path="res://scenes/ActionMenu.gd" type="Script" id=10]
+[ext_resource path="res://assets/sprites/UI/9patchdev.png" type="Texture" id=9]
+[ext_resource path="res://scenes/MarginContainer.gd" type="Script" id=10]
 
 [node name="UserInterface" type="CanvasLayer"]
 script = ExtResource( 6 )
@@ -225,18 +226,49 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionMenu" type="NinePatchRect" parent="."]
-margin_left = 1720.0
-margin_top = 100.0
-margin_right = 1920.0
+[node name="ActionMenu" type="MarginContainer" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -240.0
+margin_top = 64.0
+margin_bottom = 124.0
+size_flags_horizontal = 3
+size_flags_vertical = 11
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
 script = ExtResource( 10 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionMenuNodeContainer" type="VBoxContainer" parent="ActionMenu"]
-margin_right = 40.0
+[node name="ActionMenuBackground" type="NinePatchRect" parent="ActionMenu"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 220.0
 margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 9 )
+patch_margin_left = 10
+patch_margin_top = 10
+patch_margin_right = 10
+patch_margin_bottom = 10
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionMenuNodeContainer" type="VBoxContainer" parent="ActionMenu"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 220.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
 custom_constants/separation = 50
 __meta__ = {
 "_edit_use_anchors_": false

@@ -40,8 +40,11 @@ func _process(_delta):
 						selector.get_node("Container/RichTextLabel").text = commander.pieceInfo.unitData.name
 						$ScrollContainer/UnitCommanderList.add_child(selector)
 						
+						get_node("../ActionMenu").clear_action_menu()
+						get_node("../ActionMenu").visible = false
 						for action in commander.pieceInfo.unitData.actions:
 							get_node("../ActionMenu").create_action(action)
+						get_node("../ActionMenu").visible = true
 						
 						index += 1
 

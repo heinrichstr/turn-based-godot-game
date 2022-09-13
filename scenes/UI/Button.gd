@@ -1,19 +1,14 @@
-extends Control
+extends Button
 
 
 # Declare member variables here. Examples:
+var actionForButton = "default"
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
-func set_action(action):
-	$Button.actionForButton = action
-	if action == "build":
-		$Button.text = "Build"
-	elif action == "cast":
-		$Button.text = "Cast Spell"
-	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
